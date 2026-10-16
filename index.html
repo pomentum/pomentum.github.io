@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pomentum</title>
+<meta name="description" content="Open-source software from Pomentum: graphos, a multi-tenant property-graph service on PostgreSQL and Apache AGE.">
+<link rel="canonical" href="https://pomentum.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pomentum">
+<meta property="og:description" content="Open-source software from Pomentum.">
+<meta property="og:url" content="https://pomentum.github.io/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem('graphos-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bar"><div class="bar-inner">
+  <a class="bar-name" href="./">Pomentum</a>
+  <a class="link" href="#projects">Projects</a>
+  <a class="link" href="https://github.com/pomentum">GitHub</a>
+  <div class="mode" role="group" aria-label="Colour theme">
+    <button type="button" data-set="light" aria-pressed="false">Light</button><button type="button" data-set="dark" aria-pressed="false">Dark</button>
+  </div>
+</div></div>
+
+<div class="wrap">
+<main>
+  <header class="top">
+    <p class="eyebrow">Open source</p>
+    <h1>Pomentum</h1>
+    <p class="lede">Software we build and publish in the open.</p>
+  </header>
+
+  <h2 id="projects">Projects</h2>
+  <div class="cards">
+    <!-- One card per public project. The text is the project's own README
+         tagline; no claim here that its docs do not make. -->
+    <article class="card">
+      <div class="card-head">
+        <h3><a href="https://pomentum.github.io/graphos/">graphos</a></h3>
+        <span class="tag">Apache-2.0</span>
+      </div>
+      <p>A multi-tenant property-graph service: PostgreSQL + Apache AGE behind a typed HTTP API.</p>
+      <p class="muted">Bulk loading, traversal, aggregation, graph algorithms and a web UI; consumers never get a connection string.</p>
+      <ul class="facts">
+        <li>PostgreSQL 18 + Apache AGE 1.8</li>
+        <li>Python client</li>
+        <li>Web UI</li>
+      </ul>
+      <p class="links">
+        <a href="https://pomentum.github.io/graphos/">Website</a>
+        <a href="https://pomentum.github.io/graphos/#benchmarks">Benchmarks</a>
+        <a href="https://github.com/pomentum/graphos">Source</a>
+      </p>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <p>Each project's licence is in its repository. Apache AGE is a project of the Apache Software Foundation and is not affiliated with Pomentum.</p>
+</footer>
+</div>
+<script src="theme.js"></script>
+</body>
+</html>

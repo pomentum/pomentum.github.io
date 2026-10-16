@@ -1,0 +1,69 @@
+/* Colours and type of the graphos website (pomentum/graphos, website/style.css), so the org page and the project pages match. */
+:root{
+  --ground:#EDF0F2; --surface:#F7F8F9; --ink:#131A22; --ink-soft:#4A5563; --rule:#CBD3DB;
+  --grid:rgba(19,26,34,.07); --term:#141A22; --term-ink:#D7DEE7;
+  --accent:#1D5BD6; --accent-soft:#DDE7FA;
+  --store:#5B45B0; --store-soft:#ECE8F8;
+  --measured:#1C7A3A; --measured-bg:#DCEFE2;
+  --designed:#9A6100; --designed-bg:#F6EAD2;
+  --never:#B3261E; --never-bg:#F7DEDC;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F1216; --surface:#161A20; --ink:#E6EAEF; --ink-soft:#9AA5B3; --rule:#2A313B;
+    --grid:rgba(230,234,239,.06); --term:#0A0D10; --term-ink:#D7DEE7;
+    --accent:#8AB0FF; --accent-soft:#1A2640;
+    --store:#B7A6F2; --store-soft:#231E3A;
+    --measured:#6FCB8D; --measured-bg:#132A1C;
+    --designed:#E6B75A; --designed-bg:#2E2410;
+    --never:#F2877F; --never-bg:#361816;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F1216; --surface:#161A20; --ink:#E6EAEF; --ink-soft:#9AA5B3; --rule:#2A313B;
+  --grid:rgba(230,234,239,.06); --term:#0A0D10; --term-ink:#D7DEE7;
+  --accent:#8AB0FF; --accent-soft:#1A2640;
+  --store:#B7A6F2; --store-soft:#231E3A;
+  --measured:#6FCB8D; --measured-bg:#132A1C;
+  --designed:#E6B75A; --designed-bg:#2E2410;
+  --never:#F2877F; --never-bg:#361816;
+}
+*{box-sizing:border-box}
+body{background:var(--ground); color:var(--ink); font-family:var(--body); font-size:16.5px; line-height:1.6; padding:0 16px 64px; margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.wrap, .bar-inner{max-width:960px; margin:0 auto}
+.bar{position:sticky; top:0; z-index:10; background:var(--ground); border-bottom:1px solid var(--rule); margin:0 -16px; padding:8px 16px}
+.bar-inner{display:flex; align-items:center; gap:16px}
+.bar-name{display:inline-flex; align-items:center; gap:9px; font-family:var(--display); font-weight:800; font-size:15px; color:var(--ink); text-decoration:none; margin-right:auto}
+.bar-name::before{content:""; width:9px; height:9px; background:var(--accent)}
+.bar a.link{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); text-decoration:none}
+.mode{display:inline-flex; border:1px solid var(--rule); border-radius:4px; overflow:hidden}
+.mode button{font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); background:transparent; border:0; padding:8px 10px; cursor:pointer}
+.mode button + button{border-left:1px solid var(--rule)}
+.mode button[aria-pressed="true"]{background:var(--ink); color:var(--ground)}
+header.top{padding:72px 0 8px}
+.eyebrow{display:flex; align-items:center; gap:12px; font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:0 0 14px}
+.eyebrow::before{content:""; width:28px; height:1px; background:currentColor}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(3rem,10vw,5.2rem); line-height:.95; letter-spacing:-.045em; margin:0 0 20px}
+h1::after{content:"."; color:var(--accent)}
+.lede{font-size:1.3rem; line-height:1.45; margin:0; max-width:36ch}
+h2{font-family:var(--display); font-weight:800; font-size:1.6rem; letter-spacing:-.03em; margin:64px 0 16px; padding-top:12px; border-top:1px solid var(--rule)}
+.cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr)); gap:14px}
+.card{background:var(--surface); border:1px solid var(--rule); border-left:3px solid var(--accent); border-radius:0 4px 4px 0; padding:18px 20px}
+.card-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px}
+.card h3{font-family:var(--display); font-weight:800; font-size:1.4rem; letter-spacing:-.02em; margin:0}
+.card h3 a{color:var(--ink); text-decoration:none}
+.tag{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--store); background:var(--store-soft); padding:3px 8px; border-radius:2px}
+.card p{margin:10px 0 0}
+.muted{color:var(--ink-soft); font-size:15px}
+.facts{list-style:none; padding:0; margin:14px 0 0; display:flex; flex-wrap:wrap; gap:6px}
+.facts li{font-family:var(--mono); font-size:12px; background:var(--accent-soft); color:var(--accent); padding:3px 8px; border-radius:2px}
+.links{margin-top:16px !important; display:flex; gap:18px; font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase}
+.links a{text-decoration:none}
+footer{margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); color:var(--ink-soft); font-size:14.5px}
