@@ -378,8 +378,6 @@ details.toc a:hover, details.toc button:hover, details.toc a:focus-visible, deta
 .term:hover .term-tip, .term:focus .term-tip { display: block; }
 @media (max-width: 600px) { .term-tip { position: fixed; left: 16px; right: 16px; bottom: 16px; width: auto; max-width: none; } }
 #story-text code { font-size: 0.86em; padding: 1px 5px; border: 1px solid var(--line); border-radius: 2px; background: var(--bg); overflow-wrap: anywhere; }
-.story-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.story-nav .btn.primary { flex: 1; text-align: left; justify-content: flex-start; line-height: 1.3; }
 .kbd-hint { font-size: 11px; color: var(--mute); margin: 12px 0 0 !important; letter-spacing: 0.04em; }
 .does { border: 1px solid var(--line); border-radius: 4px; background: color-mix(in srgb, var(--panel) 70%, transparent); padding: 18px 20px; }
 .does ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
@@ -513,3 +511,60 @@ details.toc a:hover, details.toc button:hover, details.toc a:focus-visible, deta
 .iso .c-label { font-size: 13.5px; }
 .iso .b-label { font-size: 12px; }
 .iso .p-label.plate { font-size: 10.5px; }
+
+/* — The first screen, in plain words: the name, its etymology small, the plain line, three reasons, the first use cases in
+   the order to learn Syrmos, and the whole system folded — */
+.hero.first { padding-top: 56px; }
+.hero.first h1.name { margin-bottom: 6px; }
+.entry.small { margin: 0 0 26px; padding-left: 0; font-size: 13px; color: var(--mute); }
+.entry.small::before { display: none; }
+.entry.small .headword { font-size: 13.5px; }
+.entry.small .pron, .entry.small .pos { font-size: 12px; }
+.entry.small .def { display: inline; font-size: 13px; }
+.hero .lede.plain { font-size: clamp(1.45rem, 3vw, 2.1rem); line-height: 1.25; font-weight: 700; letter-spacing: -0.02em; max-width: 26ch; margin: 0 0 16px; }
+.plain-line { font-size: 17px; line-height: 1.6; color: var(--ink); margin: 0 0 14px; max-width: 62ch; }
+.who { font-size: 15px; color: var(--mute); margin: 0; max-width: 62ch; }
+.not-yet { display: none; }
+/* a phone: the greyed buttons, whose tooltip a touch cannot show, give way to a line that says why; the Greek definition moves
+   below the buttons, so the plain words come first */
+@media (max-width: 560px) {
+  .hero.first { display: flex; flex-direction: column; }
+  .hero.first h1.name { margin-bottom: 16px; }
+  .hero.first .entry.small { order: 10; margin: 18px 0 0; }
+  .hero.first .cta .held { display: none; }
+  .not-yet { display: block; order: 8; font-size: 14px; color: var(--mute); margin: 10px 0 0; }
+  .hero.first .cta { order: 7; }
+  .hero.first .eyebrow.line { order: 9; }
+}
+.engineers { font-size: 13.5px; color: var(--mute); margin: 0; max-width: 72ch; }
+.engineers span { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.summary { margin: 28px 0 0; padding: 18px 22px; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 4px; background: var(--panel); max-width: 980px; }
+.summary h2 { font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; font-weight: 600; }
+.summary dl { margin: 0; display: grid; gap: 10px; }
+.summary dl > div { display: grid; grid-template-columns: 9.5em 1fr; gap: 4px 16px; }
+.summary dt { font-weight: 600; color: var(--ink); }
+.summary dd { margin: 0; color: var(--ink); }
+@media (max-width: 600px) { .summary dl > div { grid-template-columns: 1fr; } }
+.reasons { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.reasons li { border: 1px solid var(--line); border-radius: 4px; background: var(--panel); padding: 18px 20px; }
+.reasons h2 { font-size: 18px; letter-spacing: -0.015em; margin: 12px 0 6px; }
+.reasons p { margin: 0; color: var(--mute); font-size: 14.5px; line-height: 1.55; }
+.reason-icon { width: 30px; height: 30px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; display: block; }
+.section-head.stacked { display: block; }
+.section-head.stacked .eyebrow { color: var(--accent); margin: 0 0 6px; }
+.section-head.stacked h2 { margin: 0 0 8px; }
+.section-head.stacked p:last-child { color: var(--mute); max-width: 70ch; }
+.see-all { margin: 18px 0 0; }
+details.system { margin: 72px 0 0; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); }
+details.system > summary { list-style: none; cursor: pointer; padding: 16px 20px; display: grid; gap: 4px; }
+details.system > summary::-webkit-details-marker { display: none; }
+details.system > summary span { font-weight: 700; font-size: 18px; color: var(--ink); }
+details.system > summary span::before { content: "+"; display: inline-block; width: 1.2em; color: var(--accent); font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+details.system[open] > summary span::before { content: "−"; }
+details.system > summary small { color: var(--mute); font-size: 14px; padding-left: 1.45em; }
+details.system > summary:hover span { color: var(--accent); }
+details.system .overview { margin: 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; }
+@media (max-width: 900px) { .reasons { grid-template-columns: 1fr; } }
+@media (max-width: 720px) {
+  .plain-line { font-size: 16px; }
+}

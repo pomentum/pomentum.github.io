@@ -1,4 +1,5 @@
-// The list of use cases, in the order of the gallery. A new use case: a diagram file, a words file, and a line in each list below.
+// The list of use cases. A new use case: a diagram file, a words file, and a line in each list below, the order of useCases
+// placing it where a reader learning Syrmos would meet it.
 import type { UseCaseMeta, UseCaseText } from "./types";
 import { coldRoom } from "./diagrams/cold-room";
 import { onSite } from "./diagrams/on-site";
@@ -43,28 +44,31 @@ import { matrixRooms as matrixRoomsEn } from "./en/matrix-rooms";
 import { mcpTool as mcpToolEn } from "./en/mcp-tool";
 import { testsPromotion as testsPromotionEn } from "./en/tests-promotion";
 
+// In the order to learn Syrmos, which the gallery, the first screen and the plain pages follow: one customer's first flow, then
+// keeping customers apart and changing production; what happens when work fails; where work comes from; people in the loop;
+// connectors; AI and agents; and last, devices on a spur, still largely in development.
 export const useCases: UseCaseMeta[] = [
   coldRoom,
-  topicPerPipeline,
-  onSite,
-  musicSpur,
-  padShortcuts,
-  printScan,
-  signedWebhooks,
-  matrixRooms,
-  polledDatabase,
-  deadLetters,
-  odataConnector,
-  communityNode,
-  ordersReview,
-  batchReview,
+  manyTenants,
   changingProduction,
   testsPromotion,
+  deadLetters,
+  topicPerPipeline,
+  signedWebhooks,
+  polledDatabase,
+  matrixRooms,
+  ordersReview,
+  batchReview,
+  odataConnector,
+  communityNode,
   assistantDrafts,
   ragIngestion,
   mcpTool,
   outsideAgent,
-  manyTenants,
+  onSite,
+  musicSpur,
+  padShortcuts,
+  printScan,
 ];
 
 export const textEn: Record<string, UseCaseText> = {

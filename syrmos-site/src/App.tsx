@@ -4,7 +4,7 @@ import { useRoute } from "./router";
 import { addVisited, loadTheme, loadVisited, saveTheme, type Theme } from "./store";
 import { TopBar } from "./components/TopBar";
 import { Search } from "./components/Search";
-import { Home } from "./components/Home";
+import { AllUseCases, Home } from "./components/Home";
 import { UseCasePage } from "./components/UseCasePage";
 import { HowItWorks } from "./components/HowItWorks";
 import { Footer } from "./components/Footer";
@@ -69,7 +69,7 @@ export function App() {
       </a>
       <TopBar theme={theme} onTheme={chooseTheme} onSearch={() => setSearching(true)} route={route} />
       <main id="main" tabIndex={-1}>
-        {route.page === "home" && <Home visited={visited} />}
+        {route.page === "home" && (route.gallery ? <AllUseCases visited={visited} /> : <Home visited={visited} />)}
         {route.page === "how" && <HowItWorks />}
         {route.page === "case" && <UseCasePage key={route.slug} slug={route.slug} step={route.step} />}
       </main>

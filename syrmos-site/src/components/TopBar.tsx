@@ -60,7 +60,7 @@ export function TopBar(props: { theme: Theme; onTheme: (t: Theme) => void; onSea
             /
           </span>
           <a className="bar-name" href={href.home()}>
-            syrmos <span className="bar-sub">use cases</span>
+            syrmos
           </a>
         </span>
         <nav className="bar-links" aria-label="Site">
