@@ -2,7 +2,6 @@ import type { UiShot, Kind, PartId, Status, Tag } from "../types";
 
 export const ui = {
   notPublic: "Not public yet",
-  release: { before: "The code goes public with the first release, under ", org: "github.com/pomentum", after: "." },
   guidesLater: "The guides go public with the code, at the first release.",
   nav: { useCases: "Use cases", how: "How it works", search: "Search", getStarted: "Get started", github: "GitHub", menu: "Menu", close: "Close" },
   theme: { label: "Colour theme", light: "Light", dark: "Dark" },

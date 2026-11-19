@@ -9,7 +9,8 @@ import { StageScroll } from "./StageScroll";
 import { Legend } from "./Legend";
 import { ViewSwitch } from "./ViewSwitch";
 import { Badge } from "./Badge";
-import { GitHubMark } from "./TopBar";
+import { GitHubMark, README, REPO } from "./TopBar";
+import { OutLink } from "./OutLink";
 
 const KINDS: Kind[] = ["plant", "devices", "integrations", "people", "ai", "tenants"];
 const STATUSES: Status[] = ["shown", "target", "dev"];
@@ -195,17 +196,15 @@ export function Home({ visited }: { visited: string[] }) {
           <a className="btn primary" href={href.gallery()}>
             {ui.hero.explore}
           </a>
+          {/* greyed, going nowhere, until the repository is public (OutLink's PUBLIC) */}
+          <OutLink className="btn" href={README} tag={false} label={ui.nav.getStarted}>
+            {ui.nav.getStarted}
+          </OutLink>
+          <OutLink className="btn gh" href={REPO} tag={false} label="GitHub: pomentum/syrmos">
+            <GitHubMark />
+            {ui.nav.github}
+          </OutLink>
         </div>
-        <p className="release">
-          <GitHubMark />
-          <span>
-            {ui.release.before}
-            <a href="https://github.com/pomentum" rel="noopener">
-              {ui.release.org}
-            </a>
-            {ui.release.after}
-          </span>
-        </p>
         <p className="eyebrow line">{ui.hero.eyebrow}</p>
         <p className="meta">{ui.hero.early}</p>
       </header>

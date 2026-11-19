@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useI18n } from "../i18n";
 import { href, type Route } from "../router";
 import type { Theme } from "../store";
+import { OutLink } from "./OutLink";
 
 export const README = "https://github.com/pomentum/syrmos#try-it";
 export const REPO = "https://github.com/pomentum/syrmos";
@@ -51,9 +52,17 @@ export function TopBar(props: { theme: Theme; onTheme: (t: Theme) => void; onSea
   return (
     <header className="bar">
       <div className="bar-inner">
-        <a className="bar-name" href={href.home()}>
-          syrmos <span className="bar-sub">use cases</span>
-        </a>
+        <span className="bar-brand">
+          <a className="bar-home" href="/">
+            Pomentum
+          </a>
+          <span className="bar-sep" aria-hidden="true">
+            /
+          </span>
+          <a className="bar-name" href={href.home()}>
+            syrmos <span className="bar-sub">use cases</span>
+          </a>
+        </span>
         <nav className="bar-links" aria-label="Site">
           <a href={href.gallery()} aria-current={current === "home" || current === "case" ? "page" : undefined}>
             {ui.nav.useCases}
@@ -64,6 +73,12 @@ export function TopBar(props: { theme: Theme; onTheme: (t: Theme) => void; onSea
           <button type="button" className="bar-search" onClick={props.onSearch} aria-label={`${ui.nav.search} (${isMac ? "⌘" : "Ctrl"} K)`}>
             {ui.nav.search} <kbd>{isMac ? "⌘" : "Ctrl"} K</kbd>
           </button>
+          <OutLink href={REPO} tag={false} label={ui.nav.github}>
+            {ui.nav.github}
+          </OutLink>
+          <OutLink className="keep" href={README} tag={false} label={ui.nav.getStarted}>
+            {ui.nav.getStarted}
+          </OutLink>
         </nav>
         <details className="toc" ref={menu} open={open}>
           <summary
@@ -92,6 +107,16 @@ export function TopBar(props: { theme: Theme; onTheme: (t: Theme) => void; onSea
                 <button type="button" onClick={search}>
                   {ui.nav.search}
                 </button>
+              </li>
+              <li>
+                <OutLink href={README} label={ui.nav.getStarted}>
+                  {ui.nav.getStarted}
+                </OutLink>
+              </li>
+              <li>
+                <OutLink href={REPO} label={ui.nav.github}>
+                  {ui.nav.github}
+                </OutLink>
               </li>
             </ol>
           </div>

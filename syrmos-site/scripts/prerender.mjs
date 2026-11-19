@@ -84,7 +84,7 @@ ${image ? `<meta property="og:image" content="${image}">\n` : ""}<link rel="icon
 ${ld ? `<script type="application/ld+json">${JSON.stringify(ld)}</script>\n` : ""}</head>
 <body>
 <header class="bar"><div class="bar-inner">
-<a class="bar-name" href="${up}">syrmos</a>
+<span class="bar-brand"><a class="bar-home" href="/">Pomentum</a><span class="bar-sep" aria-hidden="true">/</span><a class="bar-name" href="${up}">syrmos</a></span>
 <nav class="bar-links" aria-label="Site"><a href="${up}use-cases/">${esc(ui.nav.useCases)}</a><a href="${up}how/">${esc(ui.nav.how)}</a></nav>
 </div></header>
 <main class="wrap static">
