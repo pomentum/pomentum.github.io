@@ -44,9 +44,9 @@ addresses.
 
 ## Where it goes
 
-`npm run build` writes the static site to `../use-cases/`, the folder GitHub Pages serves at
-<https://www.pomentum.dev/use-cases/>, like the rest of this repository: no workflow. Build, then commit the sources and
-that folder together. Never edit `use-cases/` by hand; the build empties and rewrites it.
+`npm run build` writes the static site to `../use-cases/`, which is not kept in the repository. On every push to `main`, the
+repository's `pages` workflow builds it the same way and publishes it at <https://www.pomentum.dev/use-cases/>. Commit the
+sources alone; build locally to check a change first.
 
 To see it as Pages will serve it, from the repository's root: `python -m http.server 8000`, then
 <http://localhost:8000/use-cases/#/syrmos>.

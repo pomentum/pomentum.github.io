@@ -1,7 +1,7 @@
 # Working in this repository
 
-This repository is the Pomentum organisation's website at <https://www.pomentum.dev/>. GitHub Pages serves the `main` branch
-from the root, with no workflow of ours. What is pushed to `main` is live a minute later.
+This repository is the Pomentum organisation's website at <https://www.pomentum.dev/>. GitHub Pages publishes what the `pages`
+workflow (`.github/workflows/pages.yml`) builds on every push to `main`; the site is live a minute or two later.
 
 ## What is here
 
@@ -9,20 +9,21 @@ from the root, with no workflow of ours. What is pushed to `main` is live a minu
 |---|---|---|
 | `index.html`, `style.css`, `theme.js`, `404.html` | The landing page: plain HTML and CSS, a card per project | Edited by hand |
 | `use-cases-site/` | The source of the use-cases site: React, TypeScript and Vite | Edited by hand |
-| `use-cases/` | The built use-cases site, served at `/use-cases/` | Only by `npm run build` in `use-cases-site/` |
+| `use-cases/` | The built use-cases site, served at `/use-cases/`; not in the repository (`.gitignore`) | By `npm run build` in `use-cases-site/`, locally or in the workflow |
+| `.github/workflows/pages.yml` | Builds the use cases and publishes the site | Edited by hand |
 
 ## Rules
 
-- **Only the site is public.** Pages runs Jekyll only to leave out what `_config.yml` lists under `exclude`: this file,
-  `CLAUDE.md`, `README.md` and `use-cases-site/`. No page has front matter, so every published file is copied as it is. A new
-  file that must not be public goes on that list; never add front matter to a page.
+- **Only the site is public.** The workflow publishes only the files its "Assemble" step copies: the landing page's files and
+  the built `use-cases/`. This file, `CLAUDE.md`, `README.md` and `use-cases-site/` are never published. A new public file must
+  be added to that step, or it will not be on the site.
 - **Never add a folder named after a project.** Each project's own site is served from its own repository at
   `/<project>/` (for example `/graphos/`), and GitHub serves that ahead of a folder of the same name here. The use cases live
   at `/use-cases/`, and each project's are reached by hash: `use-cases/#/syrmos`.
 - **The landing page:** a card per project, using the project's own README tagline. When `style.css` or `theme.js` changes,
   bump the `?v=` date on their links in `index.html` and `404.html`.
-- **The use cases:** edit `use-cases-site/`, then build, and commit the source and `use-cases/` together. Never edit
-  `use-cases/` by hand; the build empties and rewrites it.
+- **The use cases:** edit `use-cases-site/` and commit the source alone; the workflow builds and publishes it. Build locally
+  to check it first; never commit `use-cases/`.
 
   ```bash
   cd use-cases-site
@@ -46,4 +47,4 @@ from the root, with no workflow of ours. What is pushed to `main` is live a minu
 - Conventional commits (`feat(use-cases): …`, `docs: …`, `fix(landing): …`).
 - No AI co-author or attribution lines in a commit message.
 - Merge, never rebase. Stage only the files your change made.
-- Never commit `.claude/` or `node_modules/` (both are in `.gitignore`).
+- Never commit `.claude/`, `node_modules/` or `use-cases/` (all are in `.gitignore`).

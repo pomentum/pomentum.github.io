@@ -1,8 +1,0 @@
-# GitHub Pages runs Jekyll here only to leave the files below out of the published site. No page has front matter, so every
-# file that is published is copied as it is, unprocessed. A new file that must not be public goes on this list.
-exclude:
-  - AGENTS.md
-  - CLAUDE.md
-  - README.md
-  - use-cases-site/
-  - node_modules/

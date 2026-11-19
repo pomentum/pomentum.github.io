@@ -1,3 +1,5 @@
 # local tool settings and dependencies; never published
 .claude/
 node_modules/
+# the built use cases: the pages workflow builds them from use-cases-site/ on every push
+use-cases/
