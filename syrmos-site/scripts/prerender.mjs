@@ -168,19 +168,18 @@ ${related}
 
 // the list of them
 {
-  const kinds = [...new Set(useCases.map((m) => m.kind))];
-  const groups = kinds
-    .map((k) => {
-      const items = useCases
-        .filter((m) => m.kind === k)
-        .map((m) => `<li><h3><a href="${m.slug}/">${esc(textEn[m.slug].title)}</a> ${badge(m.status)}</h3><p>${esc(textEn[m.slug].situation)}</p></li>`)
-        .join("\n");
-      return `<h2 class="eyebrow">${esc(ui.kinds[k])}</h2>\n<ul class="static-list">\n${items}\n</ul>`;
-    })
-    .join("\n");
+  // one list, in the order to learn Syrmos (content/index.ts), each with its kind
+  const groups = `<h2 class="eyebrow">${esc(ui.gallery.lede)}</h2>\n<ol class="static-list">\n${useCases
+    .map(
+      (m, i) =>
+        `<li><h3>${i + 1}. <a href="${m.slug}/">${esc(textEn[m.slug].title)}</a> ${badge(m.status)}</h3><p>${esc(textEn[m.slug].situation)}</p><p class="muted">${esc(ui.kinds[m.kind])}</p></li>`,
+    )
+    .join("\n")}\n</ol>`;
   const help = Object.keys(ui.status).map((s) => `<dt>${badge(s)}</dt><dd>${esc(ui.statusHelp[s])}</dd>`).join("\n");
   const body = `<h1 class="page-title">Syrmos use cases</h1>
-<p class="case-situation">${esc(ui.hero.title)} ${esc(ui.hero.audience)}</p>
+<p class="case-situation">${esc(ui.hero.title)}</p>
+<p>${prose(ui.hero.plain)}</p>
+<p class="muted">${esc(ui.hero.engineers)} · ${esc(ui.hero.audience)}</p>
 <p>${esc(ui.hero.lede)} ${esc(ui.hero.early)}</p>
 <p class="cta"><a class="btn primary" href="../#/use-cases">Explore them, animated →</a></p>
 <dl style="margin-top:22px">
@@ -191,7 +190,7 @@ ${groups}`;
     `use-cases/index.html`,
     page({
       title: "Syrmos use cases",
-      description: `${ui.hero.title} ${ui.hero.lede}`,
+      description: `${ui.hero.title} ${ui.hero.plain}`,
       canonical: `${BASE}/use-cases/`,
       up: "../",
       body,
@@ -212,7 +211,9 @@ ${groups}`;
   const other = otherParts.map((k) => `<dt>${esc(partText[k].name)}</dt><dd>${esc(partText[k].line)} ${esc(partText[k].body)}</dd>`).join("\n");
   const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="../use-cases/">${esc(ui.page.crumbs)}</a></nav>
 <h1 class="page-title">${esc(ui.nav.how)}</h1>
-<p class="case-situation">${esc(ui.hero.title)} ${esc(ui.hero.audience)}</p>
+<p class="case-situation">${esc(ui.hero.title)}</p>
+<p>${prose(ui.hero.plain)}</p>
+<p class="muted">${esc(ui.hero.engineers)} · ${esc(ui.hero.audience)}</p>
 <p>${esc(ui.overview.caption)}</p>
 <p class="cta"><a class="btn primary" href="../#/how">See the diagram, animated →</a></p>
 ${idea}
@@ -251,6 +252,8 @@ ${ui.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${prose(f.a)}</dd>`).join("\n")}
 
 > Pomentum is an open-source hub. We explore ideas and turn them into real solutions. Its projects: Syrmos, which hosts
 > Node-RED for many tenants with every change governed, and graphos, a multi-tenant property-graph service.
+
+Syrmos in plain words: ${ui.hero.title} ${ui.hero.plain}
 
 Syrmos is early and not yet released. Each use case below is written out step by step on a page of its own, with its status
 (${Object.keys(ui.status).map((s) => `${ui.status[s]}: ${ui.statusHelp[s]}`).join(" ")}) and what that status rests on.

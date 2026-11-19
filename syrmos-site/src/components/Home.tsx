@@ -11,6 +11,9 @@ import { ViewSwitch } from "./ViewSwitch";
 import { Badge } from "./Badge";
 import { GitHubMark, README, REPO } from "./TopBar";
 import { OutLink } from "./OutLink";
+import { prose } from "./Terms";
+import { ICONS } from "./Icons";
+import type { IconName } from "../../content/types";
 
 const KINDS: Kind[] = ["plant", "devices", "integrations", "people", "ai", "tenants"];
 const STATUSES: Status[] = ["shown", "target", "dev"];
@@ -167,12 +170,28 @@ export function Gallery({ visited }: { visited: string[] }) {
   );
 }
 
+/** An icon of the diagrams' set, on its own: a 24-unit glyph in a box. */
+function Glyph({ name }: { name: IconName }) {
+  return (
+    <svg className="reason-icon" viewBox="0 0 24 24" aria-hidden="true">
+      {ICONS[name].map((d, i) => (
+        <path key={i} d={d} />
+      ))}
+    </svg>
+  );
+}
+
 export function Home({ visited }: { visited: string[] }) {
   const { ui } = useI18n();
+  // the first use on the page of cell, tenant, pipeline and spur is explained in place, once, in reading order
+  const seen = new Set<string>(["governed", "promotion"]);
+  const words = (text: string) => prose(text, seen);
+  const featured = useCases.slice(0, ui.first.featured.count);
   return (
     <div className="wrap">
-      <header className="hero top">
-        <p className="entry">
+      <header className="hero top first">
+        <h1 className="name">syrmos</h1>
+        <p className="entry small">
           <dfn className="headword" lang="el">
             {ui.entry.headword}
           </dfn>{" "}
@@ -182,16 +201,10 @@ export function Home({ visited }: { visited: string[] }) {
             <em>{ui.entry.defEm}</em>.
           </span>
         </p>
-        <h1 className="name">syrmos</h1>
-        <p className="lede">
-          {ui.hero.title.split(/(?<=\.)\s+/).map((part, i) => (
-            <span key={i} className="lede-line">
-              {part}
-            </span>
-          ))}
-        </p>
-        <p className="audience">{ui.hero.audience}</p>
-        <p className="meta">{ui.hero.lede}</p>
+        <p className="lede plain">{ui.hero.title}</p>
+        <p className="plain-line">{words(ui.hero.plain)}</p>
+        <p className="who">{ui.hero.who}</p>
+        <p className="not-yet">{ui.hero.notYet}</p>
         <div className="cta">
           <a className="btn primary" href={href.gallery()}>
             {ui.hero.explore}
@@ -206,18 +219,68 @@ export function Home({ visited }: { visited: string[] }) {
           </OutLink>
         </div>
         <p className="eyebrow line">{ui.hero.eyebrow}</p>
-        <p className="meta">{ui.hero.early}</p>
       </header>
-      <figure className="overview">
-        <StageScroll>
-          <Diagram def={overview} step={0} label={ui.overview.caption} />
-        </StageScroll>
-        <div className="overview-foot">
-          <Legend />
-          <ViewSwitch />
+      <section className="summary" aria-labelledby="summary-title">
+        <h2 id="summary-title">{ui.first.summary.title}</h2>
+        <dl>
+          {ui.first.summary.rows.map((r) => (
+            <div key={r.k}>
+              <dt>{r.k}</dt>
+              <dd>{words(r.v)}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+      <ul className="reasons" aria-label={ui.first.reasonsLabel}>
+        {ui.first.reasons.map((r) => (
+          <li key={r.title}>
+            <Glyph name={r.icon} />
+            <h2>{r.title}</h2>
+            <p>{words(r.line)}</p>
+          </li>
+        ))}
+      </ul>
+      <section className="featured" aria-labelledby="featured-title">
+        <div className="section-head stacked">
+          <p className="eyebrow">{ui.first.featured.eyebrow}</p>
+          <h2 id="featured-title">{ui.first.featured.title}</h2>
+          <p>{words(ui.first.featured.lede)}</p>
         </div>
-        <figcaption>{ui.overview.caption}</figcaption>
-      </figure>
+        <ul className="cards">
+          {featured.map((m) => (
+            <Card key={m.slug} m={m} visited={visited.includes(m.slug)} />
+          ))}
+        </ul>
+        <p className="see-all">
+          <a className="btn" href={href.gallery()}>
+            {ui.first.featured.all(useCases.length)} →
+          </a>
+        </p>
+      </section>
+      <details className="system">
+        <summary>
+          <span>{ui.first.system.summary}</span>
+          <small>{ui.first.system.hint}</small>
+        </summary>
+        <figure className="overview">
+          <StageScroll>
+            <Diagram def={overview} step={0} label={ui.overview.caption} />
+          </StageScroll>
+          <div className="overview-foot">
+            <Legend />
+            <ViewSwitch />
+          </div>
+          <figcaption>{ui.overview.caption}</figcaption>
+        </figure>
+      </details>
+    </div>
+  );
+}
+
+/** Every use case, with its filters: #/use-cases. */
+export function AllUseCases({ visited }: { visited: string[] }) {
+  return (
+    <div className="wrap">
       <Gallery visited={visited} />
     </div>
   );

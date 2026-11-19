@@ -15,11 +15,66 @@ export const ui = {
   },
   hero: {
     audience: "For platform teams, integrators and service providers who run Node-RED for several customers, sites or departments.",
-    title: "Host Node-RED for many tenants. Every change governed.",
+    // the first screen, in plain words: what it is for someone who has never heard of Node-RED or tenants
+    title: "Small automations for many customers, kept apart and changed safely.",
+    plain:
+      "Draw a flow in Node-RED, a visual tool for wiring data together: “when a fridge warms up, alert the on-call”. Syrmos runs it for each customer in a separate, locked-down space of its own (a cell), keeps every version, and lets a change reach production only after its checks pass.",
+    // the same, for engineers, in smaller type
+    engineers: "Governed, multi-tenant Node-RED",
+    who: "For teams that run Node-RED for several customers, sites or departments.",
+    // above the buttons: the state of the code, said once; the greyed buttons say it too on a wide screen
+    notYet: "Code not public yet. Explore the use cases meanwhile.",
     lede: "Step through real situations and see what Syrmos does in each: where work comes in, where it runs, who may change it, and where the secrets stay.",
     explore: "Explore use cases",
-    eyebrow: "Use cases · early, not yet released",
+    eyebrow: "Early · not yet released",
     early: "Each use case says whether it is shown today, a target, or in development.",
+  },
+  // the first screen's three reasons, and the first use cases in the order to learn Syrmos
+  first: {
+    // as on the graphos page: the idea in three rows, under the first screen's headline; no licence row
+    summary: {
+      title: "In 30 seconds",
+      rows: [
+        {
+          k: "The problem",
+          v: "Node-RED makes small automations easy to build. Run them for several customers and they usually all run in one shared Node-RED: anyone who can deploy can run anything, passwords sit inside nodes, and production changes without a second look.",
+        },
+        {
+          k: "The approach",
+          v: "Each customer, a tenant, gets cells of its own; every change is a version that reaches production through checks and any review it needs; a credential gateway adds the secrets on the way out. In short: governed, multi-tenant Node-RED.",
+        },
+        { k: "What it is not", v: "Not a new flow tool: it runs Node-RED unmodified, so a flow stays a Node-RED flow. Not released yet: Syrmos is early." },
+      ],
+    },
+    reasonsLabel: "What Syrmos is for",
+    reasons: [
+      {
+        icon: "building",
+        title: "Keep customers apart",
+        line: "Each customer, a tenant, gets cells of its own on a network of its own, so one customer's flows can't reach another's. The use case One platform, many tenants shows it.",
+      },
+      {
+        icon: "reviewer",
+        title: "Change production safely",
+        line: "Try a change to a pipeline where it can't hurt and keep it as a new version. It goes live only after its checks and, where required, another person's approval; if it misfires, go back in one step.",
+      },
+      {
+        icon: "key",
+        title: "Keep passwords out of the flows",
+        line: "A flow asks for a connection by name, and the password is added only on the way out, so it stays out of the flow, its exports and its logs.",
+      },
+    ] as { icon: "building" | "reviewer" | "key"; title: string; line: string }[],
+    featured: {
+      eyebrow: "Use cases",
+      title: "Start here",
+      lede: "In the order to learn Syrmos: one customer's first flow, keeping customers apart, changing production safely, testing first, what happens when work fails, and sharing one connection.",
+      count: 6,
+      all: (n: number) => `See all ${n} use cases, in order`,
+    },
+    system: {
+      summary: "See the whole system",
+      hint: "Every part on one diagram: where work comes in, where it runs, and how it reaches outside services.",
+    },
   },
   overview: {
     title: "The whole platform on one page",
@@ -28,7 +83,7 @@ export const ui = {
   },
   gallery: {
     title: "Use cases",
-    lede: "Find a situation close to yours and step through it.",
+    lede: "In the order to learn Syrmos, from one customer's first flow to devices on a spur. Or find a situation close to yours.",
     kind: "Kind",
     status: "Status",
     all: "All",
@@ -163,7 +218,9 @@ export const shots: Record<UiShot, { alt: string; caption: string; w: number; h:
 export const glossary: { id: string; re: RegExp; def: string }[] = [
   { id: "protected-cell", re: /\bprotected cells?\b/i, def: "A cell for production. Nobody edits it; it changes only by promotion or rollback." },
   { id: "tenant", re: /\btenants?\b/i, def: "A customer, a site or a department: its cells, its connections and its people." },
-  { id: "cell", re: /\bcells?\b/i, def: "One Node-RED runtime of a tenant, in a container and a network of its own, or as a service on a spur." },
+  { id: "cell", re: /\bcells?\b/i, def: "A sealed box where one customer's flows run: its own Node-RED, in a container and a network of its own." },
+  { id: "pipeline", re: /\bpipelines?\b/i, def: "A flow that does one job, from where its work comes in to where it goes, kept as numbered versions." },
+  { id: "spur", re: /\bspurs?\b/i, def: "A customer's own machine on site, beside its equipment, that runs a cell there; still in development." },
   { id: "governed", re: /\bgoverned\b/i, def: "What every cell is by default: it runs only reviewed nodes, and code runs in a WebAssembly sandbox." },
   { id: "promotion", re: /\bpromotions?\b/i, def: "Copying a version of a pipeline from one cell into another, after its checks and any review it needs." },
 ];

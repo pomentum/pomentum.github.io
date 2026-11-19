@@ -2,7 +2,7 @@ import type { UseCaseText } from "../types";
 
 export const coldRoom: UseCaseText = {
   title: "Cold room monitoring",
-  situation: "Fridge sensors report over MQTT. When a fridge warms up, someone on call has to know.",
+  situation: "Fridge sensors send their readings (over MQTT). When a fridge warms up, someone on call has to know.",
   team: "Food storage · operations",
   context:
     "For a team that keeps fridges cold and already wires their sensors together in Node-RED. Without Syrmos, the alert flow shares one runtime with everything else, the chat token sits inside a node, and anyone can change the threshold in production without a second look.",

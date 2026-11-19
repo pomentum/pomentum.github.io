@@ -3,7 +3,7 @@ import type { UseCaseText } from "../types";
 export const musicSpur: UseCaseText = {
   title: "Music on a spur",
   situation: "A venue's own machine should play a synth, keep its clock steady and answer the keys, even when the network drops mid-show.",
-  caveat: "Shown on virtual MIDI ports; the spur itself is in development.",
+  caveat: "Shown in a trial with virtual MIDI ports, not yet with a real synth; the spur as a whole is still in development.",
   team: "Musicians · small venues",
   context:
     "For a musician or a small venue whose show runs from pipelines: notes, chords and patterns played on a synth, a clock it follows, keys and pads that start things. A flow that runs far away times each note over the network, so notes arrive late, and the show stops when the connection does.",
