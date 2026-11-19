@@ -74,4 +74,5 @@ h2{font-family:var(--display); font-weight:800; font-size:1.6rem; letter-spacing
 .facts li{font-family:var(--mono); font-size:12px; background:var(--accent-soft); color:var(--accent); padding:3px 8px; border-radius:2px}
 .links{margin-top:16px !important; display:flex; gap:18px; font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase}
 .links a{text-decoration:none}
+.links .off{color:var(--ink-soft); opacity:.6; cursor:not-allowed}
 footer{margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); color:var(--ink-soft); font-size:14.5px}
