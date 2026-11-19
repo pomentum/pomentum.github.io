@@ -88,7 +88,7 @@ export function UseCasePage({ slug, step }: { slug: string; step: number }) {
         </div>
         {t.caveat && <p className="caveat">{t.caveat}</p>}
         <p className="one-page">
-          <a href={`syrmos/${slug}/`}>{ui.page.onePage} →</a>
+          <a href={`use-cases/${slug}/`}>{ui.page.onePage} →</a>
         </p>
         <details className="why">
           <summary>{ui.page.whyStatus}</summary>

@@ -1,6 +1,6 @@
 # Publishes www.pomentum.dev. GitHub Pages' source is this workflow (Settings, Pages, Source: GitHub Actions), not the branch:
-# it builds the use cases from use-cases-site/ and publishes only the files listed in "Assemble", so the repository's notes
-# (README.md, AGENTS.md, CLAUDE.md) and the use cases' source are never public. A new public file goes on that list.
+# it builds Syrmos's page from syrmos-site/ and publishes only the files listed in "Assemble", so the repository's notes
+# (README.md, AGENTS.md, CLAUDE.md) and the page's source are never public. A new public file goes on that list.
 name: pages
 
 on:
@@ -28,10 +28,10 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: use-cases-site/package-lock.json
+          cache-dependency-path: syrmos-site/package-lock.json
 
-      - name: Build the use cases
-        working-directory: use-cases-site
+      - name: Build Syrmos's page and its use cases
+        working-directory: syrmos-site
         run: |
           npm ci
           npm run build
@@ -40,8 +40,9 @@ jobs:
         run: |
           mkdir _site
           cp index.html 404.html style.css theme.js favicon.svg robots.txt _site/
+          cp -r syrmos _site/syrmos
           cp -r use-cases _site/use-cases
-          mv _site/use-cases/sitemap.xml _site/use-cases/llms.txt _site/
+          mv _site/syrmos/sitemap.xml _site/syrmos/llms.txt _site/
 
       - uses: actions/configure-pages@v5
 

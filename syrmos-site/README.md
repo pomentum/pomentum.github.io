@@ -1,18 +1,18 @@
-# syrmos · use cases (sources)
+# syrmos · the page and its use cases (sources)
 
-A static site of animated step-through diagrams: each use case shows one situation from start to finish and what Syrmos does in
-it. React, TypeScript and Vite; no backend, no tracking. Routing is by hash (`#/syrmos/<use-case>/<step>`), so the build works at any
-path and every step can be linked.
+Syrmos's page at www.pomentum.dev/syrmos/: what Syrmos is, the platform drawn, and its use cases as animated step-through
+diagrams, each one situation from start to finish and what Syrmos does in it. React, TypeScript and Vite; no backend, no tracking.
+Routing is by hash (`#/use-cases/<use-case>/<step>`, `#/how`), so the build works at any path and every step can be linked.
 
-These are the sources; the built site is `../use-cases/` (see "Where it goes" below).
+These are the sources; the built site is `../syrmos/` (see "Where it goes" below).
 
 ## Run it
 
 ```bash
-cd use-cases-site
+cd syrmos-site
 npm ci
 npm run dev        # http://localhost:5180
-npm run build      # type check, then the static site in ../use-cases/
+npm run build      # type check, the site in ../syrmos/, its plain pages, sitemap.xml and llms.txt
 npm run preview    # the built site at http://localhost:5181
 ```
 
@@ -39,14 +39,14 @@ a fact cannot be found there, the words file says `TODO(verify)` in its `verify`
 only. Each use case's status follows the trials: **Shown** when it runs today in the demo or a trial, **Target** when Syrmos is
 designed for it but it has not been shown end to end, **In development** when it depends on the spur.
 
-Never on the site: the terms Syrmos is published under, customer or organisation names (use `acme`, `demo`, `sample`), local paths or e-mail
-addresses.
+Never on the site: customer or organisation names (use `acme`, `demo`, `sample`), personal names, local paths or e-mail addresses.
+Syrmos's licence line speaks for Syrmos only, not for the use cases' own text and diagrams.
 
 ## Where it goes
 
-`npm run build` writes the static site to `../use-cases/`, which is not kept in the repository. On every push to `main`, the
-repository's `pages` workflow builds it the same way and publishes it at <https://www.pomentum.dev/use-cases/>. Commit the
-sources alone; build locally to check a change first.
+`npm run build` writes the static site to `../syrmos/` (and redirects from its first address to `../use-cases/`), neither kept
+in the repository. On every push to `main`, the repository's `pages` workflow builds it the same way and publishes it at
+<https://www.pomentum.dev/syrmos/>. Commit the sources alone; build locally to check a change first.
 
 To see it as Pages will serve it, from the repository's root: `python -m http.server 8000`, then
-<http://localhost:8000/use-cases/#/syrmos>.
+<http://localhost:8000/syrmos/>.

@@ -57,7 +57,8 @@ export function App() {
     if (route.page === "case") {
       const words = i18n.text(route.slug);
       document.title = words ? `${words.t.title} · syrmos use cases` : "syrmos · use cases";
-    } else document.title = route.page === "how" ? `${t.how.title} · syrmos use cases` : "syrmos · use cases";
+    } else if (route.page === "how") document.title = `${t.how.title} · syrmos`;
+    else document.title = route.gallery ? "Use cases · syrmos" : "syrmos · governed, multi-tenant Node-RED";
   }, [route]);
 
   return (

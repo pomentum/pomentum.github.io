@@ -13,12 +13,12 @@ function dropVerify(): Plugin {
   };
 }
 
-// The built site is written to ../use-cases/, which GitHub Pages serves as it is at www.pomentum.dev/use-cases/ (routes #/syrmos/...).
+// The built site is written to ../syrmos/, which the pages workflow publishes at www.pomentum.dev/syrmos/.
 // base "./": the build works at any path, since routing is by hash.
 export default defineConfig({
   base: "./",
   plugins: [dropVerify(), react()],
-  build: { outDir: "../use-cases", assetsDir: "static", emptyOutDir: true, sourcemap: false },
+  build: { outDir: "../syrmos", assetsDir: "static", emptyOutDir: true, sourcemap: false },
   server: { port: 5180, strictPort: true },
   preview: { port: 5181, strictPort: true },
 });

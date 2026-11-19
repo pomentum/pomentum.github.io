@@ -10,20 +10,22 @@ When `style.css` or `theme.js` changes, bump the `?v=` date on their links in `i
 and `404.html`: browsers keep them for ten minutes otherwise. Preview
 locally with `python -m http.server 8000`.
 
-Each project has its own site under this address, served from its own repository
-(<https://www.pomentum.dev/graphos/> from `docs/` of `pomentum/graphos`). Never add a
-folder named after a project here: it would compete with that project's site. A card on the
-landing page links to each project and uses the project's own README tagline, nothing more.
+Each project has its own page under this address. A project whose repository publishes its own
+Pages site is served from it (<https://www.pomentum.dev/graphos/> from `docs/` of
+`pomentum/graphos`); never add a folder with its name here. Syrmos's repository publishes none,
+so its page is built here. A card on the landing page links to each project and uses the
+project's own README tagline, nothing more.
 
-## Use cases
+## Syrmos
 
-The use cases, at <https://www.pomentum.dev/use-cases/#/syrmos>, are the one built part. Their
-source is `use-cases-site/` (React, TypeScript and Vite); the workflow builds it with `npm ci &&
-npm run build` into `use-cases/`, which is not kept in the repository. Build locally to check
-a change before pushing it.
+Syrmos's page, at <https://www.pomentum.dev/syrmos/>, with its use cases at
+<https://www.pomentum.dev/syrmos/use-cases/>, is the one built part. Its source is `syrmos-site/`
+(React, TypeScript and Vite); the workflow builds it with `npm ci && npm run build` into
+`syrmos/`, which is not kept in the repository. Build locally to check a change before pushing it.
 
 ## What is published
 
-Only the files the workflow's "Assemble" step copies: the landing page's files and the built
-use cases. This README, `AGENTS.md`, `CLAUDE.md` and the use cases' source are never
-published. The rules for working here are in [AGENTS.md](AGENTS.md).
+Only the files the workflow's "Assemble" step copies: the landing page's files, Syrmos's built
+page, redirects from its first address (`/use-cases/`), and `sitemap.xml` and `llms.txt`. This
+README, `AGENTS.md`, `CLAUDE.md` and `syrmos-site/` are never published. The rules for working
+here are in [AGENTS.md](AGENTS.md).

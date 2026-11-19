@@ -1,35 +1,35 @@
 import { useEffect, useState } from "react";
 
-// Hash routes, each under its project's name, so the one folder can hold more projects' use cases later:
-//   #/syrmos                    the home page
-//   #/syrmos/use-cases          the gallery
-//   #/syrmos/how, /how/<part>   How it works
-//   #/syrmos/<use-case>/<step>  a step, every one linkable
-// A link without the project (#/cold-room/2, as the first version wrote them) still opens, and is rewritten in place.
-export const PROJECT = "syrmos";
-
+// The app is Syrmos's page at www.pomentum.dev/syrmos/. Its routes, by hash:
+//   #/                            the landing page: the name, the platform drawn, and the use cases
+//   #/use-cases                   the use cases' gallery
+//   #/use-cases/<use-case>/<step> a step of a walkthrough, every one linkable
+//   #/how, #/how/<part>           How it works
+// Older addresses still open and are rewritten in place: #/syrmos/... (when the app lived at /use-cases/) and #/<use-case>/<step>.
 export type Route =
   | { page: "home"; gallery?: boolean }
   | { page: "how"; part?: string }
   | { page: "case"; slug: string; step: number };
 
+const stepOf = (s?: string) => {
+  const n = Number.parseInt(s ?? "1", 10);
+  return Number.isFinite(n) && n > 0 ? n : 1;
+};
+
 export function parse(hash: string): Route {
   let parts = hash.replace(/^#\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
-  if (parts[0] === PROJECT) parts = parts.slice(1);
+  if (parts[0] === "syrmos") parts = parts.slice(1);
   if (parts.length === 0) return { page: "home" };
-  if (parts[0] === "use-cases") return { page: "home", gallery: true };
   if (parts[0] === "how") return { page: "how", part: parts[1] };
-  const n = Number.parseInt(parts[1] ?? "1", 10);
-  return { page: "case", slug: parts[0], step: Number.isFinite(n) && n > 0 ? n : 1 };
+  if (parts[0] === "use-cases") return parts[1] ? { page: "case", slug: parts[1], step: stepOf(parts[2]) } : { page: "home", gallery: true };
+  return { page: "case", slug: parts[0], step: stepOf(parts[1]) };
 }
 
-const at = (path = "") => `#/${PROJECT}${path}`;
-
 export const href = {
-  home: () => at(),
-  gallery: () => at("/use-cases"),
-  how: (part?: string) => at(part ? `/how/${part}` : "/how"),
-  step: (slug: string, step = 1) => at(`/${slug}/${step}`),
+  home: () => "#/",
+  gallery: () => "#/use-cases",
+  how: (part?: string) => (part ? `#/how/${part}` : "#/how"),
+  step: (slug: string, step = 1) => `#/use-cases/${slug}/${step}`,
 };
 
 /** The canonical hash of a route. */
@@ -39,10 +39,10 @@ function hashOf(r: Route): string {
   return r.gallery ? href.gallery() : href.home();
 }
 
-/** Puts the project's name in an address that lacks it, without a history entry. */
+/** Rewrites an older or partial address to the canonical one, without a history entry. */
 function canonical(r: Route) {
   const want = hashOf(r);
-  if (location.hash !== want) history.replaceState(null, "", want);
+  if (location.hash !== want && !(want === "#/" && location.hash === "")) history.replaceState(null, "", want);
 }
 
 export function useRoute(): Route {
