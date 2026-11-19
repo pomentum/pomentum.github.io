@@ -1,6 +1,8 @@
 # local tool settings and dependencies; never published
 .claude/
 node_modules/
-# built by the pages workflow from syrmos-site/ on every push: Syrmos's page, and redirects from its first address
+# built by the pages workflow on every push: Syrmos's page and redirects from its first address (from syrmos-site/), and
+# graphos's page (from graphos-site/)
 syrmos/
 use-cases/
+graphos/

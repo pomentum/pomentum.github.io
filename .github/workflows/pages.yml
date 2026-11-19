@@ -1,6 +1,7 @@
 # Publishes www.pomentum.dev. GitHub Pages' source is this workflow (Settings, Pages, Source: GitHub Actions), not the branch:
-# it builds Syrmos's page from syrmos-site/ and publishes only the files listed in "Assemble", so the repository's notes
-# (README.md, AGENTS.md, CLAUDE.md) and the page's source are never public. A new public file goes on that list.
+# it builds Syrmos's page from syrmos-site/ and graphos's from graphos-site/, and publishes only the files listed in "Assemble",
+# so the repository's notes (README.md, AGENTS.md, CLAUDE.md), the pages' source and tools/ are never public. A new public file
+# goes on that list.
 name: pages
 
 on:
@@ -28,10 +29,19 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: syrmos-site/package-lock.json
+          cache-dependency-path: |
+            syrmos-site/package-lock.json
+            graphos-site/package-lock.json
 
       - name: Build Syrmos's page and its use cases
         working-directory: syrmos-site
+        run: |
+          npm ci
+          npm run build
+
+      # its version line and "Latest" read graphos's latest GitHub release in the browser; the plain pages take it at this build
+      - name: Build graphos's page and its use cases
+        working-directory: graphos-site
         run: |
           npm ci
           npm run build
@@ -42,7 +52,8 @@ jobs:
           cp index.html 404.html style.css theme.js favicon.svg robots.txt _site/
           cp -r syrmos _site/syrmos
           cp -r use-cases _site/use-cases
-          mv _site/syrmos/sitemap.xml _site/syrmos/llms.txt _site/
+          cp -r graphos _site/graphos
+          node tools/site-index.mjs _site
 
       - uses: actions/configure-pages@v5
 

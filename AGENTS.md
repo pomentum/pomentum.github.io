@@ -9,31 +9,39 @@ workflow (`.github/workflows/pages.yml`) builds on every push to `main`; the sit
 |---|---|---|
 | `index.html`, `style.css`, `theme.js`, `404.html` | The landing page: plain HTML and CSS, a card per project | Edited by hand |
 | `syrmos-site/` | The source of Syrmos's page at `/syrmos/`: React, TypeScript and Vite, its use cases in `content/` | Edited by hand |
-| `syrmos/`, `use-cases/` | Built from `syrmos-site/`: the page, and redirects from its first address; not in the repository | By `npm run build` in `syrmos-site/`, locally or in the workflow |
-| `.github/workflows/pages.yml` | Builds Syrmos's page and publishes the site | Edited by hand |
+| `graphos-site/` | The source of graphos's page at `/graphos/`, the same app with graphos's content | Edited by hand |
+| `syrmos/`, `use-cases/`, `graphos/` | Built from the two: the pages, and redirects from Syrmos's first address; not in the repository | By `npm run build` in each, locally or in the workflow |
+| `tools/site-index.mjs` | Merges the two pages' `sitemap.xml` and `llms.txt` into the root's; never published | Edited by hand |
+| `.github/workflows/pages.yml` | Builds both pages and publishes the site | Edited by hand |
 
 ## Rules
 
 - **Only the site is public.** The workflow publishes only the files its "Assemble" step copies: the landing page's files, the
-  built `syrmos/` and `use-cases/`, and `sitemap.xml` and `llms.txt` at the root. This file, `CLAUDE.md`, `README.md` and
-  `syrmos-site/` are never published. A new public file must be added to that step, or it will not be on the site.
-- **A project's own site comes first.** A project whose repository publishes its own Pages site (graphos) is served from it at
-  `/<project>/`; never add a folder with its name here. Syrmos's repository publishes none, so its page is built here at
-  `/syrmos/`.
+  built `syrmos/`, `use-cases/` and `graphos/`, and `sitemap.xml` and `llms.txt` at the root. This file, `CLAUDE.md`,
+  `README.md`, `tools/`, `syrmos-site/` and `graphos-site/` are never published. A new public file must be added to that step,
+  or it will not be on the site.
+- **Every project's page is built here.** A project repository that publishes a Pages site of its own is served at
+  `/<project>/` instead of the folder here, so none does: graphos's page moved here from its repository's `docs/`.
 - **The landing page:** a card per project, using the project's own README tagline. When `style.css` or `theme.js` changes,
   bump the `?v=` date on their links in `index.html` and `404.html`.
-- **Syrmos's page:** edit `syrmos-site/` and commit the source alone; the workflow builds and publishes it. Build locally to
-  check it first; never commit `syrmos/` or `use-cases/`.
+- **A project's page:** edit `syrmos-site/` or `graphos-site/` and commit the source alone; the workflow builds and publishes
+  it. Build locally to check it first; never commit `syrmos/`, `use-cases/` or `graphos/`.
 
   ```bash
-  cd syrmos-site
+  cd syrmos-site     # or graphos-site
   npm ci
-  npm run build      # type check, then the page in ../syrmos/ (and the redirects in ../use-cases/)
+  npm run build      # type check, then the page in ../syrmos/ (and the redirects in ../use-cases/), or in ../graphos/
   ```
 
   Preview the whole site as Pages serves it with `python -m http.server 8000` at the root, then open
-  <http://localhost:8000/syrmos/>.
-- **Its addresses:** `/syrmos/` is the animated app (`#/use-cases/<use case>/<step>`, `#/how`). For search engines and AI tools,
+  <http://localhost:8000/syrmos/> or <http://localhost:8000/graphos/>.
+- **graphos's version:** its page reads graphos's latest GitHub release for the version line and "Latest"; the statuses keep
+  the release in `graphos-site/content/version.ts`, the one its use cases were checked against. Change that line only after
+  checking the page against a new release.
+- **Their addresses:** `/syrmos/` and `/graphos/` are the animated app (`#/use-cases/<use case>/<step>`, `#/how`; graphos's
+  also `#/<section>`, and its old single page's anchors such as `#benchmarks`). Below, Syrmos's; graphos's are the same
+  under `/graphos/`, with `/graphos/overview/` for its sections.
+- **Syrmos's addresses:** `/syrmos/` is the animated app (`#/use-cases/<use case>/<step>`, `#/how`). For search engines and AI tools,
   `npm run build` also writes a plain page per use case at `/syrmos/use-cases/<use case>/`, the list at `/syrmos/use-cases/`
   and How it works at `/syrmos/how/` (`syrmos-site/scripts/prerender.mjs`), and `sitemap.xml` and `llms.txt`. They come from
   the same content files; never edit them by hand. The first addresses, `/use-cases/...`, redirect to these.
@@ -52,4 +60,4 @@ workflow (`.github/workflows/pages.yml`) builds on every push to `main`; the sit
 - Conventional commits (`feat(syrmos): …`, `docs: …`, `fix(landing): …`).
 - No AI co-author or attribution lines in a commit message.
 - Merge, never rebase. Stage only the files your change made.
-- Never commit `.claude/`, `node_modules/`, `syrmos/` or `use-cases/` (all are in `.gitignore`).
+- Never commit `.claude/`, `node_modules/`, `syrmos/`, `use-cases/` or `graphos/` (all are in `.gitignore`).
