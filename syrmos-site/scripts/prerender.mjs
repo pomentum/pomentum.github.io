@@ -57,7 +57,7 @@ function page({ title, description, canonical, up, body, ld, image }) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
-${image ? `<meta property="og:image" content="${image}">\n` : ""}<link rel="icon" href="${up}favicon.svg" type="image/svg+xml">
+${image ? `<meta property="og:image" content="${image}">\n` : ""}<link rel="icon" href="${up}favicon.svg?v=20261119" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap">
