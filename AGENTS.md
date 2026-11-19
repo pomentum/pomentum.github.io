@@ -24,6 +24,9 @@ workflow (`.github/workflows/pages.yml`) builds on every push to `main`; the sit
   bump the `?v=` date on their links in `index.html` and `404.html`.
 - **The use cases:** edit `use-cases-site/` and commit the source alone; the workflow builds and publishes it. Build locally
   to check it first; never commit `use-cases/`.
+- **Found by search engines and AI tools:** besides the animated app, `npm run build` writes a plain page per use case at
+  `/use-cases/syrmos/<slug>/`, the list and How it works (`use-cases-site/scripts/prerender.mjs`), and `sitemap.xml` and
+  `llms.txt`, which the workflow moves to the site's root. They come from the same content files; never edit them by hand.
 
   ```bash
   cd use-cases-site

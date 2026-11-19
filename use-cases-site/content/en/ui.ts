@@ -83,6 +83,7 @@ export const ui = {
     viewLabel: "Diagram view",
     view3d: "3D",
     seeIt: "See it in Syrmos",
+    onePage: "Read it on one page",
     viewFlat: "Flat",
   },
   legend: {

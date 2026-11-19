@@ -87,6 +87,9 @@ export function UseCasePage({ slug, step }: { slug: string; step: number }) {
           <Badge status={meta.status} />
         </div>
         {t.caveat && <p className="caveat">{t.caveat}</p>}
+        <p className="one-page">
+          <a href={`syrmos/${slug}/`}>{ui.page.onePage} →</a>
+        </p>
         <details className="why">
           <summary>{ui.page.whyStatus}</summary>
           <p>{t.statusNote}</p>

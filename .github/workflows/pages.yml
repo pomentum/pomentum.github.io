@@ -41,6 +41,7 @@ jobs:
           mkdir _site
           cp index.html 404.html style.css theme.js favicon.svg robots.txt _site/
           cp -r use-cases _site/use-cases
+          mv _site/use-cases/sitemap.xml _site/use-cases/llms.txt _site/
 
       - uses: actions/configure-pages@v5
 

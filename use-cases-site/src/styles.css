@@ -177,6 +177,7 @@ details.toc a:hover, details.toc button:hover, details.toc a:focus-visible, deta
 .hero h1.name::after { content: "."; color: var(--accent); }
 .hero .lede { font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.45; color: var(--ink); margin: 0 0 16px; max-width: 34ch; }
 .hero .audience { color: var(--ink); font-size: 15.5px; margin: 0 0 12px; max-width: 64ch; }
+.one-page { margin: 10px 0 0; font-size: 14px; }
 .caveat { font-size: 13px; color: var(--mute); margin: 2px 0 6px; padding-left: 8px; border-left: 2px solid var(--line); }
 .hero .meta { color: var(--mute); font-size: 14.5px; margin: 0; max-width: 64ch; }
 .hero .cta { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 8px; }
