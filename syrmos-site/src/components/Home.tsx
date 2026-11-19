@@ -190,8 +190,7 @@ export function Home({ visited }: { visited: string[] }) {
   return (
     <div className="wrap">
       <header className="hero top first">
-        <h1 className="name">syrmos</h1>
-        <p className="entry small">
+        <p className="entry">
           <dfn className="headword" lang="el">
             {ui.entry.headword}
           </dfn>{" "}
@@ -201,7 +200,8 @@ export function Home({ visited }: { visited: string[] }) {
             <em>{ui.entry.defEm}</em>.
           </span>
         </p>
-        <p className="lede plain">{ui.hero.title}</p>
+        <h1 className="name">syrmos</h1>
+        <p className="lede">{ui.hero.title}</p>
         <p className="plain-line">{words(ui.hero.plain)}</p>
         <p className="who">{ui.hero.who}</p>
         <p className="not-yet">{ui.hero.notYet}</p>

@@ -415,6 +415,7 @@ details.toc a:hover, details.toc button:hover, details.toc a:focus-visible, deta
 /* — How it works — */
 .how-head { padding: 44px 0 6px; }
 .lede-line { display: block; }
+.lede-line + .lede-line { margin-top: 0.35em; }
 .faq { margin: 0; display: grid; gap: 14px; max-width: 80ch; }
 .faq > div { border: 1px solid var(--line); border-radius: 4px; background: var(--panel); padding: 14px 16px; }
 .faq dt { font-weight: 600; margin: 0 0 6px; }
@@ -515,13 +516,6 @@ details.toc a:hover, details.toc button:hover, details.toc a:focus-visible, deta
 /* — The first screen, in plain words: the name, its etymology small, the plain line, three reasons, the first use cases in
    the order to learn Syrmos, and the whole system folded — */
 .hero.first { padding-top: 56px; }
-.hero.first h1.name { margin-bottom: 6px; }
-.entry.small { margin: 0 0 26px; padding-left: 0; font-size: 13px; color: var(--mute); }
-.entry.small::before { display: none; }
-.entry.small .headword { font-size: 13.5px; }
-.entry.small .pron, .entry.small .pos { font-size: 12px; }
-.entry.small .def { display: inline; font-size: 13px; }
-.hero .lede.plain { font-size: clamp(1.45rem, 3vw, 2.1rem); line-height: 1.25; font-weight: 700; letter-spacing: -0.02em; max-width: 26ch; margin: 0 0 16px; }
 .plain-line { font-size: 17px; line-height: 1.6; color: var(--ink); margin: 0 0 14px; max-width: 62ch; }
 .who { font-size: 15px; color: var(--mute); margin: 0; max-width: 62ch; }
 .not-yet { display: none; }
@@ -529,8 +523,6 @@ details.toc a:hover, details.toc button:hover, details.toc a:focus-visible, deta
    below the buttons, so the plain words come first */
 @media (max-width: 560px) {
   .hero.first { display: flex; flex-direction: column; }
-  .hero.first h1.name { margin-bottom: 16px; }
-  .hero.first .entry.small { order: 10; margin: 18px 0 0; }
   .hero.first .cta .held { display: none; }
   .not-yet { display: block; order: 8; font-size: 14px; color: var(--mute); margin: 10px 0 0; }
   .hero.first .cta { order: 7; }

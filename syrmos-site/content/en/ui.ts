@@ -16,7 +16,7 @@ export const ui = {
   hero: {
     audience: "For platform teams, integrators and service providers who run Node-RED for several customers, sites or departments.",
     // the first screen, in plain words: what it is for someone who has never heard of Node-RED or tenants
-    title: "Small automations for many customers, kept apart and changed safely.",
+    title: "One engine, many carriages: Syrmos pulls the small automations of many customers along, each kept apart and changed safely.",
     plain:
       "Draw a flow in Node-RED, a visual tool for wiring data together: “when a fridge warms up, alert the on-call”. Syrmos runs it for each customer in a separate, locked-down space of its own (a cell), keeps every version, and lets a change reach production only after its checks pass.",
     // the same, for engineers, in smaller type
