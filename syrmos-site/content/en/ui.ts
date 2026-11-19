@@ -2,6 +2,8 @@ import type { UiShot, Kind, PartId, Status, Tag } from "../types";
 
 export const ui = {
   notPublic: "Not public yet",
+  release: { before: "The code goes public with the first release, under ", org: "github.com/pomentum", after: "." },
+  guidesLater: "The guides go public with the code, at the first release.",
   nav: { useCases: "Use cases", how: "How it works", search: "Search", getStarted: "Get started", github: "GitHub", menu: "Menu", close: "Close" },
   theme: { label: "Colour theme", light: "Light", dark: "Dark" },
   // the dictionary entry, word for word as the Syrmos README has it
@@ -109,7 +111,35 @@ export const ui = {
     five: "Five ideas",
     more: "The other parts you meet",
     seeIn: "See it in",
+    faq: "Questions people ask first",
   },
+  // each answer from the Syrmos main branch: the README, NOTICE, quotas.ts, the idle-cells decision, the cell contract, the spur guide
+  faq: [
+    {
+      q: "Is it ready to use?",
+      a: "Not yet: Syrmos is early. It is built and tested on Docker and installed from a clone with one command. Still to come: a release with published images, a Kubernetes target, a hosted model provider checked live, and most connectors checked against the real services.",
+    },
+    {
+      q: "What does it need to run?",
+      a: "Git and Docker with Compose (Engine 26 and Compose 2.24 or later) on one host, and nothing else. One command builds and starts it from the clone. A spur, a tenant's own machine, needs no Docker: a package for Linux and the Raspberry Pi, or a setup for Windows.",
+    },
+    {
+      q: "Is it a fork of Node-RED?",
+      a: "No. Each cell runs Node-RED unmodified, as published on npm. Syrmos is an independent project, not affiliated with or endorsed by the OpenJS Foundation.",
+    },
+    {
+      q: "Can I bring my existing flows?",
+      a: "Yes, since Node-RED itself is unchanged. A deploy that uses a node the cell may not use is refused, with the list of those nodes. Node-RED's Function node stays off in a governed cell: code runs as `syrmos function` instead, in a WebAssembly sandbox.",
+    },
+    {
+      q: "How much does a cell use?",
+      a: "You choose a size per cell, from 128 MB of memory and a quarter of a CPU up to 1 GB and two CPUs; the default is 512 MB and one CPU, as hard limits. At rest, a cell of the development stack holds about 70 to 80 MB.",
+    },
+    {
+      q: "How do you know one tenant can't reach another?",
+      a: "By probes run from inside a cell, each with a negative control: on the installation's layout, all 53 pass. No cell or bridge reaches the internet, the cloud's metadata address, a database, the secret store or another cell. Measured on one Docker host.",
+    },
+  ],
   footer: {
     source: "Source",
     licence: "Syrmos licence",
@@ -143,7 +173,7 @@ export const partText: Record<PartId, { name: string; line: string; body: string
   cell: {
     name: "Cell",
     line: "One Node-RED runtime of a tenant, in a container and a network of its own, or as a service on a spur.",
-    body: "Each cell is unmodified Node-RED in a hardened container: a numeric non-root user, a read-only root, no capabilities and hard limits. It sits on an internal network that only the control plane and the bus join, so no cell reaches another. It is governed by default: only reviewed nodes run, and a tenant's code runs in a WebAssembly sandbox.",
+    body: "Each cell is unmodified Node-RED in a hardened container: a numeric non-root user, a read-only root, no capabilities and hard limits. It sits on an internal network that only the control plane and the bus join, so no cell reaches another. It is governed by default: only reviewed nodes run, and a tenant's code runs in a WebAssembly sandbox. On a spur, isolation comes from the machine and its local policy, not a container.",
   },
   "protected-cell": {
     name: "Protected cell",

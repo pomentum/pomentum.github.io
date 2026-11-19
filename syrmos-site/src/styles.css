@@ -406,6 +406,14 @@ details.toc a:hover, details.toc button:hover, details.toc a:focus-visible, deta
 
 /* — How it works — */
 .how-head { padding: 44px 0 6px; }
+.release { display: flex; align-items: center; gap: 8px; margin: 14px 0 0; font-size: 14.5px; color: var(--mute); }
+.release svg { width: 15px; height: 15px; fill: currentColor; flex: none; }
+.lede-line { display: block; }
+.faq { margin: 0; display: grid; gap: 14px; max-width: 80ch; }
+.faq > div { border: 1px solid var(--line); border-radius: 4px; background: var(--panel); padding: 14px 16px; }
+.faq dt { font-weight: 600; margin: 0 0 6px; }
+.faq dd { margin: 0; color: var(--ink); }
+.faq code { font-size: 0.86em; padding: 1px 5px; border: 1px solid var(--line); border-radius: 2px; background: var(--bg); }
 .how-lede { font-size: 18px; color: var(--mute); max-width: 60ch; margin: 0 0 24px; }
 .ideas, .parts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px; }
 .ideas li, .parts li { border: 1px solid var(--line); border-radius: 4px; background: var(--panel); padding: 18px 20px; scroll-margin-top: 80px; }

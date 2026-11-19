@@ -1,4 +1,5 @@
 import { ideas, otherParts, useCases } from "../../content";
+import { prose } from "./Terms";
 import { overview } from "../../content/diagrams/overview";
 import type { PartId } from "../../content/types";
 import { useI18n } from "../i18n";
@@ -69,6 +70,15 @@ export function HowItWorks() {
           </li>
         ))}
       </ul>
+      <h2 className="section-title">{ui.how.faq}</h2>
+      <dl className="faq">
+        {ui.faq.map((f) => (
+          <div key={f.q}>
+            <dt>{f.q}</dt>
+            <dd>{prose(f.a, new Set(["cell", "tenant", "governed", "protected-cell", "promotion"]))}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
   );
 }

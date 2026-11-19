@@ -9,7 +9,7 @@ import { Badge } from "./Badge";
 import { Card } from "./Home";
 import { ViewSwitch } from "./ViewSwitch";
 import { prose } from "./Terms";
-import { OutLink } from "./OutLink";
+import { OutLink, held } from "./OutLink";
 import { shots } from "../../content/en/ui";
 
 const typing = (el: EventTarget | null) => el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
@@ -218,11 +218,14 @@ export function UseCasePage({ slug, step }: { slug: string; step: number }) {
       <section className="try" aria-labelledby="try-title">
         <h2 id="try-title" className="eyebrow">{ui.page.tryIt}</h2>
         <p>{t.tryIt.text}</p>
-        {t.tryIt.href && (
-          <OutLink className="btn primary" href={t.tryIt.href}>
-            {t.tryIt.linkText ?? ui.page.tryIt}
-          </OutLink>
-        )}
+        {t.tryIt.href &&
+          (held(t.tryIt.href) ? (
+            <p className="muted">{ui.guidesLater}</p>
+          ) : (
+            <OutLink className="btn primary" href={t.tryIt.href}>
+              {t.tryIt.linkText ?? ui.page.tryIt}
+            </OutLink>
+          ))}
       </section>
 
       {import.meta.env.DEV && t.verify && t.verify.length > 0 && (

@@ -9,8 +9,7 @@ import { StageScroll } from "./StageScroll";
 import { Legend } from "./Legend";
 import { ViewSwitch } from "./ViewSwitch";
 import { Badge } from "./Badge";
-import { GitHubMark, README, REPO } from "./TopBar";
-import { OutLink } from "./OutLink";
+import { GitHubMark } from "./TopBar";
 
 const KINDS: Kind[] = ["plant", "devices", "integrations", "people", "ai", "tenants"];
 const STATUSES: Status[] = ["shown", "target", "dev"];
@@ -183,21 +182,30 @@ export function Home({ visited }: { visited: string[] }) {
           </span>
         </p>
         <h1 className="name">syrmos</h1>
-        <p className="lede">{ui.hero.title}</p>
+        <p className="lede">
+          {ui.hero.title.split(/(?<=\.)\s+/).map((part, i) => (
+            <span key={i} className="lede-line">
+              {part}
+            </span>
+          ))}
+        </p>
         <p className="audience">{ui.hero.audience}</p>
         <p className="meta">{ui.hero.lede}</p>
         <div className="cta">
           <a className="btn primary" href={href.gallery()}>
             {ui.hero.explore}
           </a>
-          <OutLink className="btn" href={README}>
-            {ui.nav.getStarted}
-          </OutLink>
-          <OutLink className="btn gh" href={REPO} label="GitHub: pomentum/syrmos">
-            <GitHubMark />
-            {ui.nav.github}
-          </OutLink>
         </div>
+        <p className="release">
+          <GitHubMark />
+          <span>
+            {ui.release.before}
+            <a href="https://github.com/pomentum" rel="noopener">
+              {ui.release.org}
+            </a>
+            {ui.release.after}
+          </span>
+        </p>
         <p className="eyebrow line">{ui.hero.eyebrow}</p>
         <p className="meta">{ui.hero.early}</p>
       </header>

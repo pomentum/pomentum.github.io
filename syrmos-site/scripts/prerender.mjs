@@ -122,7 +122,7 @@ ${s.body.map((p) => `<p>${prose(p)}</p>`).join("\n")}${metrics ? `\n<p class="m"
   const shot = m.shot ? shots[m.shot] : null;
   const tryLink = t.tryIt.href
     ? held(t.tryIt.href)
-      ? `<p>${esc(t.tryIt.linkText ?? ui.page.tryIt)} (${esc(ui.notPublic.toLowerCase())})</p>`
+      ? `<p class="muted">${esc(ui.guidesLater)}</p>`
       : `<p><a class="btn primary" href="${t.tryIt.href}" rel="noopener">${esc(t.tryIt.linkText ?? ui.page.tryIt)}</a></p>`
     : "";
   const related = m.related
@@ -219,6 +219,10 @@ ${idea}
 <h2 class="eyebrow">The other parts you meet</h2>
 <dl>
 ${other}
+</dl>
+<h2 class="eyebrow">${esc(ui.how.faq)}</h2>
+<dl>
+${ui.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${prose(f.a)}</dd>`).join("\n")}
 </dl>`;
   write(
     `how/index.html`,
