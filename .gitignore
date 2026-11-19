@@ -1,0 +1,3 @@
+# local tool settings and dependencies; never published
+.claude/
+node_modules/
