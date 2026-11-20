@@ -1,4 +1,5 @@
-// After `vite build`: a plain HTML page per use case, the list of them and How it works, so that search engines and AI tools,
+// After `vite build`: a plain HTML page per use case, the list of them, How it works and the overview (the first screen's words,
+// written out), so that search engines, AI tools and link previews,
 // which mostly read a page without running its JavaScript, find every use case at an address of its own. Each page is written
 // from the same content files as the animated walkthrough, and links to it. Also writes sitemap.xml and llms.txt (the pages
 // workflow moves both to the site's root), lists the pages in the app's <noscript>, and leaves redirects at the first
@@ -37,6 +38,8 @@ function prose(text) {
     .join("");
 }
 const pageUrl = (slug) => `${BASE}/use-cases/${slug}/`;
+/** The preview a shared link shows: the first screen, 1200 × 630 (public/og.png, made by scripts/og-image.mjs). */
+const OG = `${BASE}/og.png`;
 const write = (rel, html) => {
   const file = join(OUT, rel);
   mkdirSync(dirname(file), { recursive: true });
@@ -57,7 +60,7 @@ function page({ title, description, canonical, up, body, ld, image }) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
-${image ? `<meta property="og:image" content="${image}">\n` : ""}<link rel="icon" href="${up}favicon.svg?v=20261119" type="image/svg+xml">
+${image ? `<meta property="og:image" content="${image}">\n<meta name="twitter:card" content="summary_large_image">\n` : ""}<link rel="icon" href="${up}favicon.svg?v=20261119" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap">
@@ -85,7 +88,7 @@ ${ld ? `<script type="application/ld+json">${JSON.stringify(ld)}</script>\n` : "
 <body>
 <header class="bar"><div class="bar-inner">
 <span class="bar-brand"><a class="bar-home" href="/">Pomentum</a><span class="bar-sep" aria-hidden="true">/</span><a class="bar-name" href="${up}">syrmos</a></span>
-<nav class="bar-links" aria-label="Site"><a href="${up}use-cases/">${esc(ui.nav.useCases)}</a><a href="${up}how/">${esc(ui.nav.how)}</a></nav>
+<nav class="bar-links" aria-label="Site"><a href="${up}overview/">Overview</a><a href="${up}use-cases/">${esc(ui.nav.useCases)}</a><a href="${up}how/">${esc(ui.nav.how)}</a></nav>
 </div></header>
 <main class="wrap static">
 ${body}
@@ -160,7 +163,7 @@ ${related}
       canonical: pageUrl(m.slug),
       up,
       body,
-      image: m.shot ? `${BASE}/ui/${m.shot}.webp` : undefined,
+      image: m.shot ? `${BASE}/ui/${m.shot}.webp` : OG,
       ld: { "@context": "https://schema.org", "@type": "TechArticle", headline: t.title, description: t.situation, url: pageUrl(m.slug), inLanguage: "en", about, publisher },
     }),
   );
@@ -194,6 +197,7 @@ ${groups}`;
       canonical: `${BASE}/use-cases/`,
       up: "../",
       body,
+      image: OG,
       ld: { "@context": "https://schema.org", "@type": "CollectionPage", name: "Syrmos use cases", url: `${BASE}/use-cases/`, inLanguage: "en", about, publisher },
     }),
   );
@@ -233,14 +237,56 @@ ${ui.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${prose(f.a)}</dd>`).join("\n")}
       canonical: `${BASE}/how/`,
       up: "../",
       body,
+      image: OG,
       ld: { "@context": "https://schema.org", "@type": "TechArticle", headline: "How Syrmos works", url: `${BASE}/how/`, inLanguage: "en", about, publisher },
+    }),
+  );
+}
+
+// the overview: the first screen of /syrmos/, written out, for a reader or a crawler that does not run its JavaScript
+{
+  const up = "../";
+  const first = useCases.slice(0, ui.first.featured.count);
+  const body = `<p class="muted"><strong lang="el">${esc(ui.entry.headword)}</strong> ${esc(ui.entry.pron)} <em>${esc(ui.entry.pos)}</em> · ${esc(ui.entry.def)}<em>${esc(ui.entry.defEm)}</em>.</p>
+<h1 class="page-title">Syrmos</h1>
+<p class="case-situation">${esc(ui.hero.title)}</p>
+<p>${prose(ui.hero.plain)}</p>
+<p class="muted">${esc(ui.hero.who)} ${esc(ui.hero.eyebrow)}.</p>
+<p class="cta"><a class="btn primary" href="${up}">See it, animated →</a></p>
+<h2 class="eyebrow">${esc(ui.first.summary.title)}</h2>
+<dl>
+${ui.first.summary.rows.map((r) => `<dt>${esc(r.k)}</dt><dd>${prose(r.v)}</dd>`).join("\n")}
+</dl>
+<h2 class="eyebrow">${esc(ui.first.reasonsLabel)}</h2>
+<dl>
+${ui.first.reasons.map((r) => `<dt>${esc(r.title)}</dt><dd>${prose(r.line)}</dd>`).join("\n")}
+</dl>
+<h2 class="eyebrow">${esc(ui.first.featured.eyebrow)} · ${esc(ui.first.featured.title)}</h2>
+<p>${esc(ui.first.featured.lede)}</p>
+<ol class="static-list">
+${first.map((m) => `<li><h3><a href="${up}use-cases/${m.slug}/">${esc(textEn[m.slug].title)}</a> ${badge(m.status)}</h3><p>${esc(textEn[m.slug].situation)}</p></li>`).join("\n")}
+</ol>
+<p><a href="${up}use-cases/">${esc(ui.first.featured.all(useCases.length))} →</a></p>
+<h2 class="eyebrow">${esc(ui.overview.title)}</h2>
+<p>${esc(ui.overview.caption)}</p>
+<p><a href="${up}how/">${esc(ui.nav.how)} →</a></p>`;
+  write(
+    `overview/index.html`,
+    page({
+      title: "Syrmos · governed, multi-tenant Node-RED",
+      description: `${ui.hero.title} ${ui.hero.who}`,
+      canonical: `${BASE}/overview/`,
+      up,
+      body,
+      image: OG,
+      ld: { "@context": "https://schema.org", "@type": "TechArticle", headline: "Syrmos", description: ui.hero.title, url: `${BASE}/overview/`, inLanguage: "en", about, publisher },
     }),
   );
 }
 
 // sitemap.xml and llms.txt, moved to the site's root by the pages workflow
 {
-  const urls = [`${SITE}/`, `${BASE}/`, `${BASE}/use-cases/`, `${BASE}/how/`, ...useCases.map((m) => pageUrl(m.slug))];
+  const urls = [`${SITE}/`, `${BASE}/`, `${BASE}/overview/`, `${BASE}/use-cases/`, `${BASE}/how/`, ...useCases.map((m) => pageUrl(m.slug))];
   write(
     "sitemap.xml",
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).join("\n")}\n</urlset>\n`,
@@ -265,8 +311,9 @@ ${useCases.map(line).join("\n")}
 ## Syrmos, the whole picture
 
 - [Syrmos](${BASE}/): the page: what Syrmos is, the platform drawn, and the use cases, animated step by step.
+- [Syrmos, written out](${BASE}/overview/): the page's first screen as plain text: in 30 seconds, what it is for, and where to start.
 - [How Syrmos works](${BASE}/how/): the five ideas every use case rests on (cells, protected cells, promotion, the credential gateway, the bus) and the other parts.
-- [All Syrmos use cases](${BASE}/use-cases/): the list, by kind and status.
+- [All Syrmos use cases](${BASE}/use-cases/): the list, in the order to learn Syrmos, with each one's kind and status.
 
 ## Pomentum
 
@@ -281,7 +328,7 @@ ${useCases.map(line).join("\n")}
   const file = join(OUT, "index.html");
   const html = readFileSync(file, "utf8");
   const list = useCases.map((m) => `<li><a href="use-cases/${m.slug}/">${esc(textEn[m.slug].title)}</a></li>`).join("");
-  const noscript = `<noscript><div style="padding:24px;font-family:system-ui;max-width:760px"><p>The animated use cases need JavaScript. Each is also written out on a page of its own:</p><ul>${list}</ul><p><a href="use-cases/">All Syrmos use cases</a> · <a href="how/">How Syrmos works</a></p></div></noscript>`;
+  const noscript = `<noscript><div style="padding:24px;font-family:system-ui;max-width:760px"><p>The animated use cases need JavaScript. Each is also written out on a page of its own:</p><ul>${list}</ul><p><a href="overview/">Syrmos, written out</a> · <a href="use-cases/">All Syrmos use cases</a> · <a href="how/">How Syrmos works</a></p></div></noscript>`;
   const next = html.replace(/<noscript>[\s\S]*?<\/noscript>/, noscript);
   if (next === html) throw new Error("prerender: no <noscript> in the built index.html");
   writeFileSync(file, next);
@@ -308,4 +355,4 @@ ${useCases.map(line).join("\n")}
   for (const m of useCases) put(`syrmos/${m.slug}/index.html`, stub(pageUrl(m.slug)));
 }
 
-console.log(`prerender: ${useCases.length} use cases, the list and How it works; sitemap.xml and llms.txt; redirects from /use-cases/`);
+console.log(`prerender: ${useCases.length} use cases, the list, How it works and the overview; sitemap.xml and llms.txt; redirects from /use-cases/`);

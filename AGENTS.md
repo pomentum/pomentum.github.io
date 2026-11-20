@@ -43,8 +43,11 @@ workflow (`.github/workflows/pages.yml`) builds on every push to `main`; the sit
   under `/graphos/`, with `/graphos/overview/` for its sections.
 - **Syrmos's addresses:** `/syrmos/` is the animated app (`#/use-cases/<use case>/<step>`, `#/how`). For search engines and AI tools,
   `npm run build` also writes a plain page per use case at `/syrmos/use-cases/<use case>/`, the list at `/syrmos/use-cases/`
-  and How it works at `/syrmos/how/` (`syrmos-site/scripts/prerender.mjs`), and `sitemap.xml` and `llms.txt`. They come from
-  the same content files; never edit them by hand. The first addresses, `/use-cases/...`, redirect to these.
+  How it works at `/syrmos/how/` and the first screen written out at `/syrmos/overview/` (`syrmos-site/scripts/prerender.mjs`),
+  and `sitemap.xml` and `llms.txt`. They come from the same content files; never edit them by hand. The first addresses,
+  `/use-cases/...`, redirect to these.
+- **Syrmos's link preview** is `syrmos-site/public/og.png`, a picture of the first screen. When the first screen changes, serve the
+  site locally, run `node scripts/og-image.mjs` in `syrmos-site/`, and build again.
 - **What the use cases may say:** facts only from the project's `main` branch. Each use case carries a status (Shown, Target,
   In development) and a note saying what it rests on. No decision-record or trial numbers, no customer or organisation names
   (the demo names are `acme` and `demo`), no personal names, e-mail addresses or local paths. Not used as product terms:
