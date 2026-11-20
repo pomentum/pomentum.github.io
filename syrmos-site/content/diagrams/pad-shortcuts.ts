@@ -1,7 +1,7 @@
 import type { UseCaseMeta } from "../types";
 
 // A pad that starts pipelines: a macro pad, foot switch or keypad given to a spur by its administrator, found by pressing a key
-// on it, held whole by the spur so its keys reach no other program; key codes only, never letters, digits or text; each press a
+// on it, held whole by the spur so its keys reach no other program; key codes only, never letters, the top row's digits, space or punctuation (docs/guide/spur-keys.md); each press a
 // webhook into the cell, where a shortcut is a pipeline; the pad's lights set from a pipeline. In development: tested on
 // recorded streams, no pad yet. Source: docs/guide/spurs.md and docs/guide/spur-keys.md on main, and the decision on keys.
 
@@ -41,7 +41,7 @@ export const padShortcuts: UseCaseMeta = {
       { id: "sync", kind: "control", pts: [[550, 84], [550, 174]], label: "sync", labelAt: 0.4 },
       { id: "press", kind: "data", pts: [[152, 218], [340, 218], [340, 251], [422, 251]], msg: "F13 pressed" },
       { id: "not-other", kind: "fail", pts: [[340, 218], [340, 160], [814, 160], [814, 418]], label: "reaches no other program", labelAt: 0.55, blockAt: 0.7 },
-      { id: "typed", kind: "fail", pts: [[152, 378], [380, 378], [380, 297], [422, 297]], label: "letters, digits, text", labelAt: 0.3, blockAt: 0.4 },
+      { id: "typed", kind: "fail", pts: [[152, 378], [380, 378], [380, 297], [422, 297]], label: "letters, top-row digits, text", labelAt: 0.3, blockAt: 0.4 },
       { id: "lights", kind: "data", pts: [[422, 343], [300, 343], [300, 240], [152, 240]], msg: "lights" },
     ],
     steps: [

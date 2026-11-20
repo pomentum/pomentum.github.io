@@ -560,3 +560,65 @@ details.system .overview { margin: 0; border: 0; border-top: 1px solid var(--lin
 @media (max-width: 720px) {
   .plain-line { font-size: 16px; }
 }
+
+/* — What Syrmos solves: the promises as links, two ways in, the tour and the problems, and a problem's own page — */
+.promises li { padding: 0; }
+.promises li a { display: block; height: 100%; padding: 18px 20px; color: inherit; text-decoration: none; border-radius: 4px; transition: background 0.15s; }
+.promises li a:hover { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+.promises li a:hover h2 { color: var(--accent); }
+.ways { margin: 28px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.way { border: 1px solid var(--line); border-radius: 4px; background: var(--panel); padding: 18px 20px; }
+.way h2 { font-size: 18px; letter-spacing: -0.015em; margin: 0 0 4px; }
+.way > p { margin: 0 0 12px; font-size: 14.5px; }
+.questions { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.questions a { display: block; padding: 7px 10px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); text-decoration: none; font-size: 14.5px; background: var(--bg); }
+.questions a::after { content: " →"; color: var(--accent); }
+.questions a:hover { border-color: var(--accent); }
+.way-cta { display: flex; flex-wrap: wrap; gap: 10px; }
+.tour { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 0; margin: 0 0 16px; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 4px; background: var(--panel); overflow: hidden; color: inherit; text-decoration: none; transition: border-color 0.2s; }
+.tour:hover { border-color: var(--accent); }
+.tour .thumb { border-right: 1px solid var(--line); }
+.tour-body { padding: 18px 22px; display: flex; flex-direction: column; gap: 8px; }
+.tour-body h3 { font-size: 21px; letter-spacing: -0.02em; margin: 0; }
+.tour-body p { margin: 0; color: var(--mute); }
+.problem-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px; }
+.problem-cards a { display: flex; flex-direction: column; gap: 6px; height: 100%; padding: 16px 18px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: inherit; text-decoration: none; transition: border-color 0.2s, transform 0.2s; }
+.problem-cards a:hover { border-color: var(--accent); transform: translateY(-2px); }
+.problem-n { font: 500 11px "JetBrains Mono", ui-monospace, Consolas, monospace; color: var(--accent); letter-spacing: 0.08em; }
+.problem-cards h3 { font-size: 18px; letter-spacing: -0.015em; margin: 0; }
+.problem-cards p { margin: 0; color: var(--mute); font-size: 14.5px; }
+.problem-cards .card-foot { margin-top: auto; padding-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font: 500 11px "JetBrains Mono", monospace; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mute); }
+.problem-eyebrow { color: var(--accent); margin: 0 0 6px; }
+.problem-does p { font-size: 17px; line-height: 1.6; max-width: 70ch; color: var(--ink); }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); }
+table.strip { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+table.strip th, table.strip td { padding: 10px 14px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
+table.strip tr:first-child th, table.strip tr:first-child td { border-top: 0; }
+table.strip th { font-weight: 600; color: var(--ink); }
+table.strip .before { color: var(--danger); }
+table.strip .after { color: var(--open-text); font-weight: 600; }
+table.strip .arrow { color: var(--mute); padding-left: 0; padding-right: 0; }
+table.strip .from { font-size: 13px; color: var(--mute); }
+table.strip .from a { margin-right: 6px; }
+.part-list { margin: 0; padding: 4px 20px 18px 40px; display: grid; gap: 6px; color: var(--mute); font-size: 14.5px; }
+.problem .section-head { margin-top: 48px; }
+@media (max-width: 900px) {
+  .ways { grid-template-columns: 1fr; }
+  .tour { grid-template-columns: 1fr; }
+  .tour .thumb { border-right: 0; border-bottom: 1px solid var(--line); }
+}
+@media (max-width: 600px) {
+  table.strip, table.strip tbody, table.strip tr, table.strip th, table.strip td { display: block; }
+  table.strip tr { padding: 10px 14px; border-top: 1px solid var(--line); }
+  table.strip tr:first-child { border-top: 0; }
+  table.strip th, table.strip td { padding: 2px 0; border: 0; }
+  table.strip .arrow { display: none; }
+  table.strip .before::after { content: "  →"; color: var(--mute); }
+}
+
+.step-status { margin: 6px 0 0; font-size: 12.5px; color: var(--mute); display: flex; align-items: center; gap: 6px; }
+#start { scroll-margin-top: 72px; }
+
+/* long metric values and team labels wrap inside their box */
+.m-value { overflow-wrap: anywhere; }
+.pills .tag { white-space: normal; max-width: 100%; overflow-wrap: anywhere; }

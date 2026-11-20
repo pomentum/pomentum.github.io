@@ -21,8 +21,10 @@ const REPO_PUBLIC = false; // as PUBLIC in src/components/OutLink.tsx
 
 // the content, loaded as the app loads it
 const vite = await createServer({ root: ROOT, logLevel: "error", server: { middlewareMode: true }, appType: "custom" });
-const { useCases, textEn, ideas, otherParts } = await vite.ssrLoadModule("/content/index.ts");
+const { useCases, textEn, ideas, otherParts, redirects } = await vite.ssrLoadModule("/content/index.ts");
+const { statusesOf, sceneAt } = await vite.ssrLoadModule("/content/walkthroughs.ts");
 const { ui, partText, shots } = await vite.ssrLoadModule("/content/en/ui.ts");
+const { tour, slugOf, problemWords } = await vite.ssrLoadModule("/content/en/problems.ts");
 await vite.close();
 
 const css = readdirSync(join(OUT, "static")).find((f) => f.endsWith(".css"));
@@ -102,11 +104,12 @@ ${body}
 `;
 }
 
+const badges = (m) => statusesOf(m, textEn[m.slug]).map(badge).join("");
 const badge = (status) => `<span class="badge st-${status}">${esc(ui.status[status])}</span>`;
 const publisher = { "@type": "Organization", name: "Pomentum", url: `${SITE}/` };
 const about = { "@type": "SoftwareApplication", name: "Syrmos", applicationCategory: "DeveloperApplication", operatingSystem: "Linux, Windows", license: "https://www.apache.org/licenses/LICENSE-2.0" };
 
-// one page per use case
+// one page per walkthrough
 for (const m of useCases) {
   const t = textEn[m.slug];
   const up = "../../";
@@ -115,8 +118,9 @@ for (const m of useCases) {
       const metrics = Object.entries(s.metrics ?? {})
         .map(([k, v]) => `${esc(t.metricLabels[k] ?? k)}: ${esc(v)}`)
         .join(" · ");
+      const from = s.tag !== "problem" && statusesOf(m, t).length > 1 ? ` <span class="m">${esc(problemWords.stepFrom)} ${badge(sceneAt(m, i).status)}</span>` : "";
       return `<li>
-<h3><span class="tag step-tag tag-${s.tag}">${esc(ui.tags[s.tag])}</span> ${i + 1}. ${esc(s.title)}</h3>
+<h3><span class="tag step-tag tag-${s.tag}">${esc(ui.tags[s.tag])}</span> ${i + 1}. ${esc(s.title)}${from}</h3>
 ${s.body.map((p) => `<p>${prose(p)}</p>`).join("\n")}${metrics ? `\n<p class="m">${metrics}</p>` : ""}
 </li>`;
     })
@@ -125,7 +129,7 @@ ${s.body.map((p) => `<p>${prose(p)}</p>`).join("\n")}${metrics ? `\n<p class="m"
   const shot = m.shot ? shots[m.shot] : null;
   const tryLink = t.tryIt.href
     ? held(t.tryIt.href)
-      ? `<p class="muted">${esc(ui.guidesLater)}</p>`
+      ? ""
       : `<p><a class="btn primary" href="${t.tryIt.href}" rel="noopener">${esc(t.tryIt.linkText ?? ui.page.tryIt)}</a></p>`
     : "";
   const related = m.related
@@ -133,10 +137,10 @@ ${s.body.map((p) => `<p>${prose(p)}</p>`).join("\n")}${metrics ? `\n<p class="m"
     .filter(Boolean)
     .map((r) => `<li><a href="../${r.slug}/">${esc(textEn[r.slug].title)}</a> · ${esc(textEn[r.slug].situation)}</li>`)
     .join("\n");
-  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="../">${esc(ui.page.crumbs)}</a> <span aria-hidden="true">/</span> <span>${esc(ui.kinds[m.kind])}</span></nav>
+  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="${up}overview/">${esc(ui.first.start.title)}</a></nav>
 <h1 class="page-title">${esc(t.title)}</h1>
 <p class="case-situation">${esc(t.situation)}</p>
-<div class="pills"><span class="tag">${esc(t.team)}</span><span class="tag">${esc(ui.gallery.steps(t.steps.length))}</span>${badge(m.status)}</div>
+<div class="pills"><span class="tag">${esc(t.team)}</span><span class="tag">${esc(ui.gallery.steps(t.steps.length))}</span>${badges(m)}</div>
 ${t.caveat ? `<p class="caveat">${esc(t.caveat)}</p>\n` : ""}<p class="cta"><a class="btn primary" href="${up}#/use-cases/${m.slug}/1">Step through it, animated →</a></p>
 <section class="context"><h2 class="eyebrow">${esc(ui.page.situation)}</h2><p>${prose(t.context)}</p></section>
 <h2 class="eyebrow">Step by step</h2>
@@ -147,9 +151,9 @@ ${steps}
 <dl>
 ${parts}
 </dl>
-<h2 class="eyebrow">${esc(ui.page.whyStatus)}: ${esc(ui.status[m.status])}</h2>
+<h2 class="eyebrow">${esc(ui.page.whyStatus)}: ${statusesOf(m, t).map((st) => esc(ui.status[st])).join(", ")}</h2>
 <p>${prose(t.statusNote)}</p>
-<p class="muted">${esc(ui.statusHelp[m.status])}</p>
+${statusesOf(m, t).map((st) => `<p class="muted">${badge(st)} ${esc(ui.statusHelp[st])}</p>`).join("\n")}
 ${shot ? `<figure class="shot"><figcaption><span class="eyebrow">${esc(ui.page.seeIt)}</span><span>${esc(shot.caption)}</span></figcaption><img src="${up}ui/${m.shot}.webp" alt="${esc(shot.alt)}" width="${shot.w}" height="${shot.h}" loading="lazy"></figure>\n` : ""}<section class="try"><h2 class="eyebrow">${esc(ui.page.tryIt)}</h2><p>${prose(t.tryIt.text)}</p>${tryLink}</section>
 <h2 class="eyebrow">${esc(ui.page.related)}</h2>
 <ul>
@@ -171,11 +175,11 @@ ${related}
 
 // the list of them
 {
-  // one list, in the order to learn Syrmos (content/index.ts), each with its kind
+  // one list, in the order to learn Syrmos (content/index.ts)
   const groups = `<h2 class="eyebrow">${esc(ui.gallery.lede)}</h2>\n<ol class="static-list">\n${useCases
     .map(
       (m, i) =>
-        `<li><h3>${i + 1}. <a href="${m.slug}/">${esc(textEn[m.slug].title)}</a> ${badge(m.status)}</h3><p>${esc(textEn[m.slug].situation)}</p><p class="muted">${esc(ui.kinds[m.kind])}</p></li>`,
+        `<li><h3>${i + 1}. <a href="${m.slug}/">${esc(textEn[m.slug].title)}</a> ${badges(m)}</h3><p>${esc(textEn[m.slug].situation)}</p></li>`,
     )
     .join("\n")}\n</ol>`;
   const help = Object.keys(ui.status).map((s) => `<dt>${badge(s)}</dt><dd>${esc(ui.statusHelp[s])}</dd>`).join("\n");
@@ -225,6 +229,10 @@ ${idea}
 <dl>
 ${other}
 </dl>
+<h2 class="eyebrow">${esc(ui.how.words.title)}</h2>
+<dl>
+${ui.how.words.items.map((x) => `<dt>${esc(x.k)}</dt><dd>${esc(x.v)}</dd>`).join("\n")}
+</dl>
 <h2 class="eyebrow">${esc(ui.how.faq)}</h2>
 <dl>
 ${ui.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${prose(f.a)}</dd>`).join("\n")}
@@ -246,7 +254,6 @@ ${ui.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${prose(f.a)}</dd>`).join("\n")}
 // the overview: the first screen of /syrmos/, written out, for a reader or a crawler that does not run its JavaScript
 {
   const up = "../";
-  const first = useCases.slice(0, ui.first.featured.count);
   const body = `<p class="muted"><strong lang="el">${esc(ui.entry.headword)}</strong> ${esc(ui.entry.pron)} <em>${esc(ui.entry.pos)}</em> · ${esc(ui.entry.def)}<em>${esc(ui.entry.defEm)}</em>.</p>
 <h1 class="page-title">Syrmos</h1>
 <p class="case-situation">${esc(ui.hero.title)}</p>
@@ -257,16 +264,24 @@ ${ui.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${prose(f.a)}</dd>`).join("\n")}
 <dl>
 ${ui.first.summary.rows.map((r) => `<dt>${esc(r.k)}</dt><dd>${prose(r.v)}</dd>`).join("\n")}
 </dl>
-<h2 class="eyebrow">${esc(ui.first.reasonsLabel)}</h2>
+<h2 class="eyebrow">${esc(ui.first.promisesLabel)}</h2>
 <dl>
-${ui.first.reasons.map((r) => `<dt>${esc(r.title)}</dt><dd>${prose(r.line)}</dd>`).join("\n")}
+${ui.first.promises.map((r) => `<dt><a href="${up}use-cases/${slugOf(r.problem)}/">${esc(r.title)}</a></dt><dd>${esc(r.line)}</dd>`).join("\n")}
 </dl>
-<h2 class="eyebrow">${esc(ui.first.featured.eyebrow)} · ${esc(ui.first.featured.title)}</h2>
-<p>${esc(ui.first.featured.lede)}</p>
+<h2 class="eyebrow">${esc(ui.first.ways.forYou.title)}</h2>
+<p>${esc(ui.first.ways.forYou.lede)}</p>
+<ul>
+${ui.first.ways.forYou.questions.map((q) => `<li><a href="${up}use-cases/${slugOf(q.problem)}/">${esc(q.q)}</a></li>`).join("\n")}
+</ul>
+<h2 class="eyebrow">${esc(ui.first.ways.forOthers.title)}</h2>
+<p>${esc(ui.first.ways.forOthers.lede)} <a href="${up}use-cases/${tour.slug}/">${esc(ui.first.ways.forOthers.tour)}</a> · <a href="${up}how/">${esc(ui.first.ways.forOthers.how)}</a></p>
+<h2 class="eyebrow">${esc(ui.first.start.eyebrow)} · ${esc(ui.first.start.title)}</h2>
+<p>${esc(ui.first.start.lede)}</p>
 <ol class="static-list">
-${first.map((m) => `<li><h3><a href="${up}use-cases/${m.slug}/">${esc(textEn[m.slug].title)}</a> ${badge(m.status)}</h3><p>${esc(textEn[m.slug].situation)}</p></li>`).join("\n")}
+<li><h3><a href="${up}use-cases/${tour.slug}/">${esc(tour.title)}</a> ${badges(useCases.find((m) => m.slug === tour.slug))}</h3><p>${esc(tour.line)}</p></li>
+${useCases.filter((m) => m.slug !== tour.slug).map((m) => `<li><h3><a href="${up}use-cases/${m.slug}/">${esc(textEn[m.slug].title)}</a> ${badges(m)}</h3><p>${esc(textEn[m.slug].situation)}</p></li>`).join("\n")}
 </ol>
-<p><a href="${up}use-cases/">${esc(ui.first.featured.all(useCases.length))} →</a></p>
+<p><a href="${up}use-cases/">${esc(ui.first.start.all)} →</a></p>
 <h2 class="eyebrow">${esc(ui.overview.title)}</h2>
 <p>${esc(ui.overview.caption)}</p>
 <p><a href="${up}how/">${esc(ui.nav.how)} →</a></p>`;
@@ -291,7 +306,7 @@ ${first.map((m) => `<li><h3><a href="${up}use-cases/${m.slug}/">${esc(textEn[m.s
     "sitemap.xml",
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).join("\n")}\n</urlset>\n`,
   );
-  const line = (m) => `- [${textEn[m.slug].title}](${pageUrl(m.slug)}): ${textEn[m.slug].situation} Status: ${ui.status[m.status]}.`;
+  const line = (m) => `- [${textEn[m.slug].title}](${pageUrl(m.slug)}): ${textEn[m.slug].situation} ${textEn[m.slug].context} Status: ${statusesOf(m, textEn[m.slug]).map((st) => ui.status[st]).join(", ")}.`;
   write(
     "llms.txt",
     `# Pomentum
@@ -304,14 +319,14 @@ Syrmos in plain words: ${ui.hero.title} ${ui.hero.plain}
 Syrmos is early and not yet released. Each use case below is written out step by step on a page of its own, with its status
 (${Object.keys(ui.status).map((s) => `${ui.status[s]}: ${ui.statusHelp[s]}`).join(" ")}) and what that status rests on.
 
-## Syrmos use cases
+## What Syrmos solves
 
 ${useCases.map(line).join("\n")}
 
 ## Syrmos, the whole picture
 
 - [Syrmos](${BASE}/): the page: what Syrmos is, the platform drawn, and the use cases, animated step by step.
-- [Syrmos, written out](${BASE}/overview/): the page's first screen as plain text: in 30 seconds, what it is for, and where to start.
+- [Syrmos, written out](${BASE}/overview/): the page's first screen as plain text: in 30 seconds, three promises, two ways in, and what Syrmos solves.
 - [How Syrmos works](${BASE}/how/): the five ideas every use case rests on (cells, protected cells, promotion, the credential gateway, the bus) and the other parts.
 - [All Syrmos use cases](${BASE}/use-cases/): the list, in the order to learn Syrmos, with each one's kind and status.
 
@@ -328,7 +343,7 @@ ${useCases.map(line).join("\n")}
   const file = join(OUT, "index.html");
   const html = readFileSync(file, "utf8");
   const list = useCases.map((m) => `<li><a href="use-cases/${m.slug}/">${esc(textEn[m.slug].title)}</a></li>`).join("");
-  const noscript = `<noscript><div style="padding:24px;font-family:system-ui;max-width:760px"><p>The animated use cases need JavaScript. Each is also written out on a page of its own:</p><ul>${list}</ul><p><a href="overview/">Syrmos, written out</a> · <a href="use-cases/">All Syrmos use cases</a> · <a href="how/">How Syrmos works</a></p></div></noscript>`;
+  const noscript = `<noscript><div style="padding:24px;font-family:system-ui;max-width:760px"><p>The animated pages need JavaScript. Each walkthrough is also written out on a page of its own:</p><ul>${list}</ul><p><a href="overview/">Syrmos, written out</a> · <a href="use-cases/">All Syrmos use cases</a> · <a href="how/">How Syrmos works</a></p></div></noscript>`;
   const next = html.replace(/<noscript>[\s\S]*?<\/noscript>/, noscript);
   if (next === html) throw new Error("prerender: no <noscript> in the built index.html");
   writeFileSync(file, next);
@@ -353,6 +368,13 @@ ${useCases.map(line).join("\n")}
   put("syrmos/index.html", stub(`${BASE}/use-cases/`));
   put("syrmos/how/index.html", stub(`${BASE}/how/`));
   for (const m of useCases) put(`syrmos/${m.slug}/index.html`, stub(pageUrl(m.slug)));
+  for (const [old, to] of Object.entries(redirects)) {
+    put(`syrmos/${old}/index.html`, stub(pageUrl(to.to)));
+    // the earlier walkthrough's own plain page, at /syrmos/use-cases/<old>/
+    const file = join(OUT, "use-cases", old, "index.html");
+    mkdirSync(dirname(file), { recursive: true });
+    writeFileSync(file, stub(pageUrl(to.to), `<script>location.replace(${JSON.stringify(`${BASE}/#/use-cases/${to.to}/${to.step}`)})</script>`));
+  }
 }
 
-console.log(`prerender: ${useCases.length} use cases, the list, How it works and the overview; sitemap.xml and llms.txt; redirects from /use-cases/`);
+console.log(`prerender: ${useCases.length} walkthroughs, the list, How it works and the overview; sitemap.xml and llms.txt; redirects from ${Object.keys(redirects).length} earlier walkthroughs and /use-cases/`);

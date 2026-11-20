@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useCases } from "../../content";
 import { overview } from "../../content/diagrams/overview";
-import type { Kind, Status, UseCaseMeta } from "../../content/types";
+import type { Status, UseCaseMeta } from "../../content/types";
 import { useI18n } from "../i18n";
 import { href } from "../router";
 import { Diagram } from "./Diagram";
@@ -13,13 +13,15 @@ import { GitHubMark, README, REPO } from "./TopBar";
 import { OutLink } from "./OutLink";
 import { prose } from "./Terms";
 import { ICONS } from "./Icons";
+import { slugOf, tour, problemWords } from "../../content/en/problems";
+import { statusesOf } from "../../content/walkthroughs";
 import type { IconName } from "../../content/types";
 
-const KINDS: Kind[] = ["plant", "devices", "integrations", "people", "ai", "tenants"];
 const STATUSES: Status[] = ["shown", "target", "dev"];
 
 export function Card({ m, visited }: { m: UseCaseMeta; visited: boolean }) {
   const i18n = useI18n();
+  const { ui } = i18n;
   const w = i18n.text(m.slug);
   if (!w) return null;
   const t = w.t;
@@ -31,8 +33,10 @@ export function Card({ m, visited }: { m: UseCaseMeta; visited: boolean }) {
         </div>
         <div className="card-body">
           <div className="card-meta">
-            <span className="tag kind">{i18n.ui.kinds[m.kind]}</span>
-            <Badge status={m.status} />
+            {m.slug === tour.slug && <span className="tag kind">{ui.first.start.eyebrow}</span>}
+            {statusesOf(m, t).map((st) => (
+              <Badge key={st} status={st} />
+            ))}
           </div>
           <h3>{t.title}</h3>
           {t.caveat && <p className="caveat">{t.caveat}</p>}
@@ -58,21 +62,19 @@ export function Card({ m, visited }: { m: UseCaseMeta; visited: boolean }) {
 export function Gallery({ visited }: { visited: string[] }) {
   const i18n = useI18n();
   const { ui } = i18n;
-  const [kind, setKind] = useState<Kind | "all">("all");
   const [status, setStatus] = useState<Status | "all">("all");
   const [q, setQ] = useState("");
 
   const list = useMemo(() => {
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
     return useCases.filter((m) => {
-      if (kind !== "all" && m.kind !== kind) return false;
-      if (status !== "all" && m.status !== status) return false;
+      if (status !== "all" && !statusesOf(m, i18n.text(m.slug)?.t).includes(status)) return false;
       if (!words.length) return true;
       const t = i18n.text(m.slug)?.t;
-      const hay = t ? [t.title, t.situation, t.team, ui.kinds[m.kind], ...t.steps.map((s) => s.title)].join(" ").toLowerCase() : "";
+      const hay = t ? [t.title, t.situation, t.team, ...t.steps.map((s) => s.title)].join(" ").toLowerCase() : "";
       return words.every((w) => hay.includes(w));
     });
-  }, [kind, status, q, i18n, ui]);
+  }, [status, q, i18n]);
 
   return (
     <section className="gallery" id="gallery" aria-labelledby="gallery-title">
@@ -81,16 +83,6 @@ export function Gallery({ visited }: { visited: string[] }) {
         <p>{ui.gallery.lede}</p>
       </div>
       <div className="filters">
-        <div className="filter-row" role="group" aria-label={ui.gallery.kind}>
-          <span className="filter-name">{ui.gallery.kind}</span>
-          <div className="chips">
-            {(["all", ...KINDS] as const).map((k) => (
-              <button key={k} type="button" className="chip" aria-pressed={kind === k} onClick={() => setKind(k)}>
-                {k === "all" ? ui.gallery.all : ui.kinds[k]}
-              </button>
-            ))}
-          </div>
-        </div>
         <div className="filter-row" role="group" aria-label={ui.gallery.status}>
           <span className="filter-name">{ui.gallery.status}</span>
           <div className="chips">
@@ -135,13 +127,12 @@ export function Gallery({ visited }: { visited: string[] }) {
           <span className="filter-count" id="filter-count" aria-live="polite">
             {ui.gallery.count(list.length, useCases.length)}
           </span>
-          {(q || kind !== "all" || status !== "all") && (
+          {(q || status !== "all") && (
             <button
               type="button"
               className="filter-reset"
               onClick={() => {
                 setQ("");
-                setKind("all");
                 setStatus("all");
               }}
             >
@@ -181,12 +172,14 @@ function Glyph({ name }: { name: IconName }) {
   );
 }
 
-export function Home({ visited }: { visited: string[] }) {
-  const { ui } = useI18n();
+export function Home(_props: { visited: string[] }) {
+  const i18n = useI18n();
+  const { ui } = i18n;
   // the first use on the page of cell, tenant, pipeline and spur is explained in place, once, in reading order
   const seen = new Set<string>(["governed", "promotion"]);
   const words = (text: string) => prose(text, seen);
-  const featured = useCases.slice(0, ui.first.featured.count);
+  const tourMeta = useCases.find((m) => m.slug === tour.slug);
+  const textOf = (slug: string) => i18n.text(slug)?.t;
   return (
     <div className="wrap">
       <header className="hero top first">
@@ -231,29 +224,87 @@ export function Home({ visited }: { visited: string[] }) {
           ))}
         </dl>
       </section>
-      <ul className="reasons" aria-label={ui.first.reasonsLabel}>
-        {ui.first.reasons.map((r) => (
+      <ul className="reasons promises" aria-label={ui.first.promisesLabel}>
+        {ui.first.promises.map((r) => (
           <li key={r.title}>
-            <Glyph name={r.icon} />
-            <h2>{r.title}</h2>
-            <p>{words(r.line)}</p>
+            <a href={href.step(slugOf(r.problem), 1)}>
+              <Glyph name={r.icon} />
+              <h2>{r.title}</h2>
+              <p>{r.line}</p>
+            </a>
           </li>
         ))}
       </ul>
-      <section className="featured" aria-labelledby="featured-title">
-        <div className="section-head stacked">
-          <p className="eyebrow">{ui.first.featured.eyebrow}</p>
-          <h2 id="featured-title">{ui.first.featured.title}</h2>
-          <p>{words(ui.first.featured.lede)}</p>
+      <section className="ways" aria-label={ui.first.ways.label}>
+        <div className="way">
+          <h2>{ui.first.ways.forYou.title}</h2>
+          <p className="muted">{ui.first.ways.forYou.lede}</p>
+          <ul className="questions">
+            {ui.first.ways.forYou.questions.map((q) => (
+              <li key={q.q}>
+                <a href={href.step(slugOf(q.problem), 1)}>{q.q}</a>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="cards">
-          {featured.map((m) => (
-            <Card key={m.slug} m={m} visited={visited.includes(m.slug)} />
-          ))}
-        </ul>
+        <div className="way">
+          <h2>{ui.first.ways.forOthers.title}</h2>
+          <p className="muted">{ui.first.ways.forOthers.lede}</p>
+          <p className="way-cta">
+            <a className="btn primary" href={href.step(tour.slug, 1)}>
+              {ui.first.ways.forOthers.tour} →
+            </a>
+            <a className="btn" href={href.how()}>
+              {ui.first.ways.forOthers.how}
+            </a>
+          </p>
+        </div>
+      </section>
+      <section className="featured" id="start" tabIndex={-1} aria-labelledby="start-title">
+        <div className="section-head stacked">
+          <p className="eyebrow">{ui.first.start.eyebrow}</p>
+          <h2 id="start-title">{ui.first.start.title}</h2>
+          <p>{words(ui.first.start.lede)}</p>
+        </div>
+        {tourMeta && (
+          <a className="tour" href={href.step(tour.slug, 1)}>
+            <div className="thumb">
+              <Diagram def={tourMeta.diagram} step={tourMeta.thumb} still />
+            </div>
+            <div className="tour-body">
+              <h3>{tour.title}</h3>
+              <p>{tour.line}</p>
+              <p className="card-foot">
+                <Badge status={tourMeta.status} />
+              </p>
+            </div>
+          </a>
+        )}
+        <ol className="problem-cards">
+          {useCases
+            .filter((m) => m.slug !== tour.slug)
+            .map((m, i) => {
+              const w = textOf(m.slug);
+              return w ? (
+                <li key={m.slug}>
+                  <a href={href.step(m.slug, 1)}>
+                    <span className="problem-n">{i + 1}</span>
+                    <h3>{w.title}</h3>
+                    <p>{w.situation}</p>
+                    <p className="card-foot">
+                      <span>{problemWords.count(w.steps.length)}</span>
+                      {statusesOf(m, w).map((st) => (
+                        <Badge key={st} status={st} />
+                      ))}
+                    </p>
+                  </a>
+                </li>
+              ) : null;
+            })}
+        </ol>
         <p className="see-all">
           <a className="btn" href={href.gallery()}>
-            {ui.first.featured.all(useCases.length)} →
+            {ui.first.start.all} →
           </a>
         </p>
       </section>

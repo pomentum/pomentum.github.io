@@ -70,6 +70,17 @@ export function HowItWorks() {
           </li>
         ))}
       </ul>
+      <h2 className="section-title" id="part-words" tabIndex={-1}>
+        {ui.how.words.title}
+      </h2>
+      <dl className="faq words">
+        {ui.how.words.items.map((x) => (
+          <div key={x.k}>
+            <dt>{x.k}</dt>
+            <dd>{x.v}</dd>
+          </div>
+        ))}
+      </dl>
       <h2 className="section-title">{ui.how.faq}</h2>
       <dl className="faq">
         {ui.faq.map((f) => (

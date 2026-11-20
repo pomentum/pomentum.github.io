@@ -48,6 +48,10 @@ workflow (`.github/workflows/pages.yml`) builds on every push to `main`; the sit
   `/use-cases/...`, redirect to these.
 - **The link previews** are `syrmos-site/public/og.png` and `graphos-site/public/og.png`, a picture of each page's first screen.
   When a first screen changes, serve the site locally, run `node scripts/og-image.mjs` in that page's folder, and build again.
+- **Syrmos's walkthroughs:** eight, one per problem a reader has (`syrmos-site/content/walkthroughs.ts`), each step drawn from an
+  earlier walkthrough's checked diagram and showing the status of what shows it, never a better one. The earlier walkthroughs'
+  addresses redirect to the step that holds them (`redirects` in `syrmos-site/content/index.ts`); an address with none opens the
+  site's 404 page.
 - **What the use cases may say:** facts only from the project's `main` branch. Each use case carries a status (Shown, Target,
   In development) and a note saying what it rests on. No decision-record or trial numbers, no customer or organisation names
   (the demo names are `acme` and `demo`), no personal names, e-mail addresses or local paths. Not used as product terms:
