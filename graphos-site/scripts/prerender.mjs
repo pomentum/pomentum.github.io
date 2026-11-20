@@ -1,4 +1,5 @@
-// After `vite build`: a plain HTML page per use case, the list of them, How it works and the overview (the landing page's
+// After `vite build`: the landing page's first view written into index.html (src/ssr.tsx; its sections, In 30 seconds to the
+// documentation, are in it), and a plain HTML page per use case, the list of them and How it works (the landing page's
 // sections: In 30 seconds, At a glance, Benchmarks, the web UI, Get started, the documentation), so that search engines and AI tools,
 // which mostly read a page without running its JavaScript, find every use case at an address of its own. Each page is written
 // from the same content files as the animated walkthrough, and links to it. Also writes sitemap.xml and llms.txt (the pages
@@ -23,6 +24,8 @@ const { useCases, textEn, ideas, otherParts } = await vite.ssrLoadModule("/conte
 const { ui, partText, shots } = await vite.ssrLoadModule("/content/en/ui.ts");
 const more = await vite.ssrLoadModule("/content/en/more.ts");
 const { VERSION } = await vite.ssrLoadModule("/content/version.ts");
+const { firstScreen } = await vite.ssrLoadModule("/src/ssr.tsx");
+const landing = firstScreen();
 // graphos's latest release, as the app reads it in the browser (src/latest.ts); these plain pages take it at each build, and
 // the release the page was built with when GitHub does not answer
 const LATEST = await fetch("https://api.github.com/repos/pomentum/graphos/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
@@ -114,7 +117,7 @@ ${ld ? `<script type="application/ld+json">${JSON.stringify(ld)}</script>\n` : "
 <body>
 <header class="bar"><div class="bar-inner">
 <span class="bar-brand"><a class="bar-home" href="/">Pomentum</a><span class="bar-sep" aria-hidden="true">/</span><a class="bar-name" href="${up}">graphos</a></span>
-<nav class="bar-links" aria-label="Site"><a href="${up}overview/">Overview</a><a href="${up}use-cases/">${esc(ui.nav.useCases)}</a><a href="${up}how/">${esc(ui.nav.how)}</a></nav>
+<nav class="bar-links" aria-label="Site"><a href="${up}use-cases/">${esc(ui.nav.useCases)}</a><a href="${up}how/">${esc(ui.nav.how)}</a></nav>
 </div></header>
 <main class="wrap static">
 ${body}
@@ -268,80 +271,20 @@ ${ui.faq.map((f) => `<dt${f.id ? ` id="${f.id}"` : ""}>${esc(f.q)}</dt><dd>${pro
   );
 }
 
-// the overview: the landing page's sections, written out
-{
-  const up = "../";
-  const dl = (rows) => `<dl>\n${rows.map((r) => `<dt>${esc(r.k)}</dt><dd>${prose(r.v, up)}</dd>`).join("\n")}\n</dl>`;
-  const th = (r) => `<th scope="row">${esc(r.what)}${r.sub ? `<small>${prose(r.sub, up)}</small>` : ""}</th>`;
-  const table = (t) =>
-    `<table><caption>${prose(t.caption, up)}</caption>\n<thead><tr>${t.head.map((h) => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead>\n<tbody>\n${t.rows
-      .map((r) => `<tr>${th(r)}${r.cells.map((c) => `<td class="n"${r.span ? ' colspan="2"' : ""}>${esc(c)}</td>`).join("")}</tr>`)
-      .join("\n")}\n</tbody></table>`;
-  const f = more.bench.factor;
-  const factor = `<table><caption>${prose(f.caption, up)}</caption>\n<thead><tr>${[f.head[0], f.head[1], f.head[2], f.head[4]]
-    .map((h) => `<th scope="col">${esc(h)}</th>`)
-    .join("")}</tr></thead>\n<tbody>\n${f.rows
-    .map((r) => `<tr>${th(r)}<td class="n">${esc(r.before)}</td><td class="n">${esc(r.after)}</td><td class="n">${esc(r.x)}</td></tr>`)
-    .join("\n")}\n</tbody></table>`;
-  const figs = more.uiShots
-    .map(
-      (k, i) =>
-        `<figure><img src="${up}ui/${k}.webp" alt="${esc(shots[k].alt)}" width="${shots[k].w}" height="${shots[k].h}" loading="lazy"><figcaption class="muted">UI 0${i + 1} · ${prose(shots[k].caption, up)}</figcaption></figure>`,
-    )
-    .join("\n");
-  const S = more.sections;
-  const body = `<h1 class="page-title">graphos</h1>
-<p class="case-situation">${esc(ui.hero.title)}</p>
-<p>${esc(ui.hero.audience)}</p>
-<p class="cta"><a class="btn primary" href="${up}">See it drawn, with the use cases animated →</a></p>
-<h2 class="eyebrow" id="summary">${esc(S.summary)}</h2>
-${dl(more.summary)}
-<h2 class="eyebrow" id="why">${esc(ui.overview.title)}</h2>
-<p>${esc(ui.overview.caption)}</p>
-<h2 class="eyebrow" id="glance">${esc(S.glance.num)} · ${esc(S.glance.title)}</h2>
-${dl(more.glance.map((r) => (r.k === "Latest" ? { ...r, v: more.latestAt(LATEST) } : r)))}
-<h2 class="eyebrow" id="features">${esc(ui.gallery.title)}</h2>
-<ul>
-${useCases.map((m) => `<li><a href="${up}use-cases/${m.slug}/">${esc(textEn[m.slug].title)}</a> · ${esc(textEn[m.slug].situation)}</li>`).join("\n")}
-</ul>
-<h2 class="eyebrow" id="benchmarks">${esc(S.bench.num)} · ${esc(S.bench.title)}</h2>
-<p>${prose(more.bench.lead, up)}</p>
-${table(more.bench.reads)}
-${table(more.bench.writes)}
-<h3>${esc(f.summary)}</h3>
-${factor}
-<p class="muted">${prose(f.note, up)}</p>
-<h2 class="eyebrow" id="ui">${esc(S.ui.num)} · ${esc(S.ui.title)}</h2>
-${figs}
-<h2 class="eyebrow" id="start">${esc(S.start.num)} · ${esc(S.start.title)}</h2>
-<p>${prose(more.start.lead, up)}</p>
-<pre><code>${esc(more.start.commands)}</code></pre>
-<ol>
-${more.start.next.map((n) => `<li>${prose(n, up)}</li>`).join("\n")}
-</ol>
-<h2 class="eyebrow" id="faq">${esc(ui.how.faq)}</h2>
-<p><a href="${up}how/#faq">${esc(ui.how.faq)}, on How graphos works</a></p>
-<h2 class="eyebrow" id="docs">${esc(S.docs.num)} · ${esc(S.docs.title)}</h2>
-<dl>
-${more.docs.map((d) => `<dt><a href="${d.href}" rel="noopener">${esc(d.name)}</a></dt><dd>${prose(d.what, up)}</dd>`).join("\n")}
-</dl>`;
-  write(
-    `overview/index.html`,
-    page({
-      title: "graphos · a multi-tenant property-graph service on PostgreSQL",
-      description: `${ui.hero.title} ${ui.hero.audience}`,
-      canonical: `${BASE}/overview/`,
-      up,
-      body,
-      image: OG,
-      ld: { "@context": "https://schema.org", "@type": "TechArticle", headline: "graphos", description: ui.hero.title, url: `${BASE}/overview/`, inLanguage: "en", about, publisher },
-    }),
-  );
-}
+// the overview's address, from when the landing page's words were written out there: the landing page carries them now
+write(
+  "overview/index.html",
+  `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Moved: graphos</title>
+<link rel="canonical" href="${BASE}/"><meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url=${BASE}/">
+</head><body><p>This page has moved to <a href="${BASE}/">${BASE}/</a>.</p></body></html>
+`,
+);
 
 // sitemap.xml and llms.txt, moved to the site's root by the pages workflow
 {
-  const urls = [`${SITE}/`, `${BASE}/`, `${BASE}/overview/`, `${BASE}/use-cases/`, `${BASE}/how/`, ...useCases.map((m) => pageUrl(m.slug))];
+  const urls = [`${SITE}/`, `${BASE}/`, `${BASE}/use-cases/`, `${BASE}/how/`, ...useCases.map((m) => pageUrl(m.slug))];
   write(
     "sitemap.xml",
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).join("\n")}\n</urlset>\n`,
@@ -364,7 +307,6 @@ ${useCases.map(line).join("\n")}
 ## graphos, the whole picture
 
 - [graphos](${BASE}/): what graphos is, drawn, and its use cases, animated step by step.
-- [graphos, written out](${BASE}/overview/): in 30 seconds, at a glance, benchmarks, the web UI, getting started and the documentation.
 - [How graphos works](${BASE}/how/): the ideas every use case rests on, and the questions people ask first.
 - [All graphos use cases](${BASE}/use-cases/): the list, by kind and status.
 - [Source](${REPO}): the repository, its guides and its changelog.
@@ -377,10 +319,12 @@ ${useCases.map(line).join("\n")}
   const file = join(OUT, "index.html");
   const html = readFileSync(file, "utf8");
   const list = useCases.map((m) => `<li><a href="use-cases/${m.slug}/">${esc(textEn[m.slug].title)}</a></li>`).join("");
-  const noscript = `<noscript><div style="padding:24px;font-family:system-ui;max-width:760px"><p>The animated use cases need JavaScript. Each is also written out on a page of its own:</p><ul>${list}</ul><p><a href="overview/">graphos, written out</a> · <a href="use-cases/">All graphos use cases</a> · <a href="how/">How graphos works</a></p></div></noscript>`;
-  const next = html.replace(/<noscript>[\s\S]*?<\/noscript>/, noscript);
-  if (next === html) throw new Error("prerender: no <noscript> in the built index.html");
+  const noscript = `<noscript><div style="padding:24px;font-family:system-ui;max-width:760px"><p>The animated use cases need JavaScript. Each is also written out on a page of its own:</p><ul>${list}</ul><p><a href="use-cases/">All graphos use cases</a> · <a href="how/">How graphos works</a></p></div></noscript>`;
+  const withWords = html.replace('<div id="root"></div>', `<div id="root">${landing}</div>`);
+  if (withWords === html) throw new Error("prerender: no empty #root in the built index.html");
+  const next = withWords.replace(/<noscript>[\s\S]*?<\/noscript>/, noscript);
+  if (next === withWords) throw new Error("prerender: no <noscript> in the built index.html");
   writeFileSync(file, next);
 }
 
-console.log(`prerender: ${useCases.length} use cases, the list, How it works and the overview; sitemap.xml and llms.txt; graphos ${LATEST}`);
+console.log(`prerender: ${useCases.length} use cases, the landing page's first view, the list and How it works; sitemap.xml and llms.txt; graphos ${LATEST}`);

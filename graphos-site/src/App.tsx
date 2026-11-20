@@ -48,8 +48,12 @@ export function App() {
   useEffect(() => {
     const target =
       route.page === "home" ? (route.gallery ? "gallery" : route.section ?? null) : route.page === "how" && route.part ? `part-${route.part}` : null;
-    if (target) requestAnimationFrame(() => document.getElementById(target)?.scrollIntoView({ block: "start" }));
-    else scrollTo(0, 0);
+    if (target) {
+      const go = () => document.getElementById(target)?.scrollIntoView({ block: "start" });
+      requestAnimationFrame(go);
+      // opened at that address: the browser settles the scroll as the page finishes loading, so go there again once it has
+      if (document.readyState !== "complete") addEventListener("load", () => setTimeout(go, 0), { once: true });
+    } else scrollTo(0, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageKey]);
 
