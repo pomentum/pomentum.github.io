@@ -46,8 +46,8 @@ workflow (`.github/workflows/pages.yml`) builds on every push to `main`; the sit
   How it works at `/syrmos/how/` and the first screen written out at `/syrmos/overview/` (`syrmos-site/scripts/prerender.mjs`),
   and `sitemap.xml` and `llms.txt`. They come from the same content files; never edit them by hand. The first addresses,
   `/use-cases/...`, redirect to these.
-- **Syrmos's link preview** is `syrmos-site/public/og.png`, a picture of the first screen. When the first screen changes, serve the
-  site locally, run `node scripts/og-image.mjs` in `syrmos-site/`, and build again.
+- **The link previews** are `syrmos-site/public/og.png` and `graphos-site/public/og.png`, a picture of each page's first screen.
+  When a first screen changes, serve the site locally, run `node scripts/og-image.mjs` in that page's folder, and build again.
 - **What the use cases may say:** facts only from the project's `main` branch. Each use case carries a status (Shown, Target,
   In development) and a note saying what it rests on. No decision-record or trial numbers, no customer or organisation names
   (the demo names are `acme` and `demo`), no personal names, e-mail addresses or local paths. Not used as product terms:
