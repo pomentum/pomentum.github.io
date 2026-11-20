@@ -1,107 +1,55 @@
-// The list of use cases. A new use case: a diagram file, a words file, and a line in each list below, the order of useCases
-// placing it where a reader learning Syrmos would meet it.
+// The walkthroughs, in the order to learn Syrmos: the cold room story, then one per problem a reader has. Each problem's
+// walkthrough is built from the steps of earlier walkthroughs (content/walkthroughs.ts); their old addresses redirect here.
 import type { UseCaseMeta, UseCaseText } from "./types";
 import { coldRoom } from "./diagrams/cold-room";
-import { onSite } from "./diagrams/on-site";
-import { signedWebhooks } from "./diagrams/signed-webhooks";
-import { polledDatabase } from "./diagrams/polled-database";
-import { ordersReview } from "./diagrams/orders-review";
-import { changingProduction } from "./diagrams/changing-production";
-import { assistantDrafts } from "./diagrams/assistant-drafts";
-import { outsideAgent } from "./diagrams/outside-agent";
-import { manyTenants } from "./diagrams/many-tenants";
-import { topicPerPipeline } from "./diagrams/topic-per-pipeline";
-import { musicSpur } from "./diagrams/music-spur";
-import { padShortcuts } from "./diagrams/pad-shortcuts";
-import { odataConnector } from "./diagrams/odata-connector";
-import { communityNode } from "./diagrams/community-node";
-import { printScan } from "./diagrams/print-scan";
-import { ragIngestion } from "./diagrams/rag-ingestion";
-import { batchReview } from "./diagrams/batch-review";
-import { deadLetters } from "./diagrams/dead-letters";
-import { matrixRooms } from "./diagrams/matrix-rooms";
-import { mcpTool } from "./diagrams/mcp-tool";
-import { testsPromotion } from "./diagrams/tests-promotion";
+import { aiHelps, besideTheMachines, changeSafely, connectServices, customersApart, nothingLost, personDecides } from "./walkthroughs";
 import { coldRoom as coldRoomEn } from "./en/cold-room";
-import { onSite as onSiteEn } from "./en/on-site";
-import { signedWebhooks as signedWebhooksEn } from "./en/signed-webhooks";
-import { polledDatabase as polledDatabaseEn } from "./en/polled-database";
-import { ordersReview as ordersReviewEn } from "./en/orders-review";
-import { changingProduction as changingProductionEn } from "./en/changing-production";
-import { assistantDrafts as assistantDraftsEn } from "./en/assistant-drafts";
-import { outsideAgent as outsideAgentEn } from "./en/outside-agent";
-import { manyTenants as manyTenantsEn } from "./en/many-tenants";
-import { topicPerPipeline as topicPerPipelineEn } from "./en/topic-per-pipeline";
-import { musicSpur as musicSpurEn } from "./en/music-spur";
-import { padShortcuts as padShortcutsEn } from "./en/pad-shortcuts";
-import { odataConnector as odataConnectorEn } from "./en/odata-connector";
-import { communityNode as communityNodeEn } from "./en/community-node";
-import { printScan as printScanEn } from "./en/print-scan";
-import { ragIngestion as ragIngestionEn } from "./en/rag-ingestion";
-import { batchReview as batchReviewEn } from "./en/batch-review";
-import { deadLetters as deadLettersEn } from "./en/dead-letters";
-import { matrixRooms as matrixRoomsEn } from "./en/matrix-rooms";
-import { mcpTool as mcpToolEn } from "./en/mcp-tool";
-import { testsPromotion as testsPromotionEn } from "./en/tests-promotion";
+import { customersApart as customersApartEn } from "./en/customers-apart";
+import { changeSafely as changeSafelyEn } from "./en/change-safely";
+import { nothingLost as nothingLostEn } from "./en/nothing-lost";
+import { personDecides as personDecidesEn } from "./en/person-decides";
+import { connectServices as connectServicesEn } from "./en/connect-services";
+import { aiHelps as aiHelpsEn } from "./en/ai-helps";
+import { besideTheMachines as besideTheMachinesEn } from "./en/beside-the-machines";
 
-// In the order to learn Syrmos, which the gallery, the first screen and the plain pages follow: one customer's first flow, then
-// keeping customers apart and changing production; what happens when work fails; where work comes from; people in the loop;
-// connectors; AI and agents; and last, devices on a spur, still largely in development.
-export const useCases: UseCaseMeta[] = [
-  coldRoom,
-  manyTenants,
-  changingProduction,
-  testsPromotion,
-  deadLetters,
-  topicPerPipeline,
-  signedWebhooks,
-  polledDatabase,
-  matrixRooms,
-  ordersReview,
-  batchReview,
-  odataConnector,
-  communityNode,
-  assistantDrafts,
-  ragIngestion,
-  mcpTool,
-  outsideAgent,
-  onSite,
-  musicSpur,
-  padShortcuts,
-  printScan,
-];
+export const useCases: UseCaseMeta[] = [coldRoom, customersApart, changeSafely, nothingLost, personDecides, connectServices, aiHelps, besideTheMachines];
 
 export const textEn: Record<string, UseCaseText> = {
   "cold-room": coldRoomEn,
-  "on-site": onSiteEn,
-  "signed-webhooks": signedWebhooksEn,
-  "polled-database": polledDatabaseEn,
-  "orders-review": ordersReviewEn,
-  "changing-production": changingProductionEn,
-  "assistant-drafts": assistantDraftsEn,
-  "outside-agent": outsideAgentEn,
-  "many-tenants": manyTenantsEn,
-  "topic-per-pipeline": topicPerPipelineEn,
-  "music-spur": musicSpurEn,
-  "pad-shortcuts": padShortcutsEn,
-  "odata-connector": odataConnectorEn,
-  "community-node": communityNodeEn,
-  "print-scan": printScanEn,
-  "rag-ingestion": ragIngestionEn,
-  "batch-review": batchReviewEn,
-  "dead-letters": deadLettersEn,
-  "matrix-rooms": matrixRoomsEn,
-  "mcp-tool": mcpToolEn,
-  "tests-promotion": testsPromotionEn,
+  "customers-apart": customersApartEn,
+  "change-safely": changeSafelyEn,
+  "nothing-lost": nothingLostEn,
+  "person-decides": personDecidesEn,
+  "connect-services": connectServicesEn,
+  "ai-helps": aiHelpsEn,
+  "beside-the-machines": besideTheMachinesEn,
 };
 
-/** Five ideas behind every scenario, and the use cases that show each best (How it works). */
+/**
+ * Where each earlier walkthrough now lives: the walkthrough built from it, at the first step it gave (1-based). An old address,
+ * #/use-cases/<old>/<n> or /syrmos/use-cases/<old>/, opens there.
+ */
+export const redirects: Record<string, { to: string; step: number }> = {
+  // earlier walkthroughs no step is drawn from any more: the walkthrough that mentions them
+  "on-site": { to: "beside-the-machines", step: 1 },
+  "pad-shortcuts": { to: "beside-the-machines", step: 1 },
+  "print-scan": { to: "beside-the-machines", step: 1 },
+  ...Object.fromEntries(
+    useCases.flatMap((m) =>
+      (m.scenes ?? [])
+        .map((s, i) => [s.from, { to: m.slug, step: i + 1 }] as const)
+        .filter(([from], i, all) => all.findIndex(([f]) => f === from) === i),
+    ),
+  ),
+};
+
+/** Five ideas behind every scenario, and the walkthroughs that show each best (How it works). */
 export const ideas = [
-  { part: "cell", best: ["many-tenants", "cold-room"] },
-  { part: "protected-cell", best: ["changing-production", "cold-room"] },
-  { part: "promotion", best: ["changing-production", "tests-promotion"] },
-  { part: "gateway", best: ["cold-room", "community-node", "many-tenants"] },
-  { part: "bus", best: ["topic-per-pipeline", "polled-database"] },
+  { part: "cell", best: ["customers-apart", "cold-room"] },
+  { part: "protected-cell", best: ["change-safely", "cold-room"] },
+  { part: "promotion", best: ["change-safely", "ai-helps"] },
+  { part: "gateway", best: ["cold-room", "connect-services", "customers-apart"] },
+  { part: "bus", best: ["nothing-lost", "connect-services"] },
 ] as const;
 
 export const otherParts = ["bridge", "tracing", "review", "audit", "mcp", "assistant", "registry", "spur"] as const;

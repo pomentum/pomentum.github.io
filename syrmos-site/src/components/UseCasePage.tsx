@@ -11,6 +11,8 @@ import { ViewSwitch } from "./ViewSwitch";
 import { prose } from "./Terms";
 import { OutLink, held } from "./OutLink";
 import { shots } from "../../content/en/ui";
+import { problemWords } from "../../content/en/problems";
+import { sceneAt, statusesOf } from "../../content/walkthroughs";
 
 const typing = (el: EventTarget | null) => el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
 
@@ -55,28 +57,23 @@ export function UseCasePage({ slug, step }: { slug: string; step: number }) {
     return out;
   }, [words, i]);
 
-  if (!meta || !words) {
-    return (
-      <div className="wrap narrow">
-        <h1 className="page-title">{ui.page.notFound}</h1>
-        <p>
-          <a href={href.gallery()}>{ui.page.done}</a>
-        </p>
-      </div>
-    );
-  }
+  // an address with no walkthrough: the site's own 404 page, as for any other address on www.pomentum.dev
+  const missing = !meta || !words;
+  useEffect(() => {
+    if (missing) location.replace("/404.html");
+  }, [missing]);
+  if (!meta || !words) return null;
   const t = words.t;
   const s = t.steps[i];
   const next = t.steps[i + 1];
   const seen = new Set<string>();
+  const scene = sceneAt(meta, i);
   const related = meta.related.map((r) => useCases.find((m) => m.slug === r)).filter((m): m is NonNullable<typeof m> => !!m);
 
   return (
     <div className="wrap case">
       <nav className="crumbs" aria-label="Breadcrumb">
-        <a href={href.gallery()}>{ui.page.crumbs}</a>
-        <span aria-hidden="true">/</span>
-        <span>{ui.kinds[meta.kind]}</span>
+        <a href={href.start()}>{ui.first.start.title}</a>
       </nav>
       <header className="case-head">
         <h1 className="page-title">{t.title}</h1>
@@ -84,7 +81,9 @@ export function UseCasePage({ slug, step }: { slug: string; step: number }) {
         <div className="pills">
           <span className="tag">{t.team}</span>
           <span className="tag">{ui.gallery.steps(total)}</span>
-          <Badge status={meta.status} />
+          {statusesOf(meta, t).map((st) => (
+            <Badge key={st} status={st} />
+          ))}
         </div>
         {t.caveat && <p className="caveat">{t.caveat}</p>}
         <p className="one-page">
@@ -93,7 +92,11 @@ export function UseCasePage({ slug, step }: { slug: string; step: number }) {
         <details className="why">
           <summary>{ui.page.whyStatus}</summary>
           <p>{t.statusNote}</p>
-          <p className="muted">{ui.statusHelp[meta.status]}</p>
+          {statusesOf(meta, t).map((st) => (
+            <p key={st} className="muted">
+              <Badge status={st} /> {ui.statusHelp[st]}
+            </p>
+          ))}
         </details>
       </header>
 
@@ -118,7 +121,7 @@ export function UseCasePage({ slug, step }: { slug: string; step: number }) {
           </ul>
           <div className="stage">
             <StageScroll>
-              <Diagram def={meta.diagram} step={i} paused={paused} replay={replay} label={ui.page.diagramLabel(t.title, `${ui.page.step(i + 1, total)}: ${s.title}`)} describedBy="story-text" />
+              <Diagram key={scene.from ?? meta.slug} def={scene.def} step={scene.at} paused={paused} replay={replay} label={ui.page.diagramLabel(t.title, `${ui.page.step(i + 1, total)}: ${s.title}`)} describedBy="story-text" />
             </StageScroll>
             <p className="scroll-hint">{ui.page.scrollHint}</p>
           </div>
@@ -172,6 +175,11 @@ export function UseCasePage({ slug, step }: { slug: string; step: number }) {
               <span className="step-count">{ui.page.step(i + 1, total)}</span>
               <span className={`tag step-tag tag-${s.tag}`}>{ui.tags[s.tag]}</span>
             </p>
+            {s.tag !== "problem" && statusesOf(meta, t).length > 1 && (
+              <p className="step-status">
+                {problemWords.stepFrom} <Badge status={scene.status} />
+              </p>
+            )}
             <h2 className="story-title">{s.title}</h2>
             <div id="story-text">
               {s.body.map((p, n) => (
@@ -219,9 +227,7 @@ export function UseCasePage({ slug, step }: { slug: string; step: number }) {
         <h2 id="try-title" className="eyebrow">{ui.page.tryIt}</h2>
         <p>{t.tryIt.text}</p>
         {t.tryIt.href &&
-          (held(t.tryIt.href) ? (
-            <p className="muted">{ui.guidesLater}</p>
-          ) : (
+          (held(t.tryIt.href) ? null : (
             <OutLink className="btn primary" href={t.tryIt.href}>
               {t.tryIt.linkText ?? ui.page.tryIt}
             </OutLink>

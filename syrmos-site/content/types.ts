@@ -140,6 +140,10 @@ export interface UseCaseMeta {
   related: string[];
   /** the Syrmos screen this use case happens on, when one is published */
   shot?: UiShot;
+  /** a walkthrough built from earlier ones: what each step draws, as a source walkthrough's slug and step (content/walkthroughs.ts) */
+  scenes?: { from: string; at: number }[];
+  /** a step whose evidence is less than its walkthrough's (or its source's) status: step index (0-based) → status */
+  evidence?: Record<number, Status>;
 }
 
 export interface StepText {

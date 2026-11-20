@@ -16,10 +16,12 @@ export const coldRoom: UseCaseMeta = {
   slug: "cold-room",
   kind: "plant",
   status: "shown",
+  // not in the recorded demo (see the status note): the typed password refused, the alert reaching the on-call, the step back
+  evidence: { 1: "target", 4: "target", 7: "target" },
   thumb: 4,
   metrics: ["alert", "secrets", "review", "version"],
   parts: ["bridge", "protected-cell", "gateway", "tracing", "promotion"],
-  related: ["topic-per-pipeline", "changing-production", "on-site"],
+  related: ["customers-apart", "change-safely", "connect-services"],
   shot: "demo",
   diagram: {
     w: 960,

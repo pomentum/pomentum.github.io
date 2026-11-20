@@ -29,47 +29,60 @@ export const ui = {
     eyebrow: "Early · not yet released",
     early: "Each use case says whether it is shown today, a target, or in development.",
   },
-  // the first screen's three reasons, and the first use cases in the order to learn Syrmos
+  // the first screen: the problem in plain words, three promises, two ways in, and the problems Syrmos solves
   first: {
-    // as on the graphos page: the idea in three rows, under the first screen's headline; no licence row
     summary: {
       title: "In 30 seconds",
       rows: [
         {
           k: "The problem",
-          v: "Node-RED makes small automations easy to build. Run them for several customers and they usually all run in one shared Node-RED: anyone who can deploy can run anything, passwords sit inside nodes, and production changes without a second look.",
+          v: "Many businesses rely on small automations, like “when a fridge warms up, alert someone”, that a supplier or an in-house team runs for several customers at once. Too often they all run in one place, where one customer's automation can reach another's, passwords sit inside the automations, and a change goes live without anyone checking.",
         },
         {
-          k: "The approach",
-          v: "Each customer, a tenant, gets cells of its own; every change is a version that reaches production through checks and any review it needs; a credential gateway adds the secrets on the way out. In short: governed, multi-tenant Node-RED.",
+          k: "What Syrmos does",
+          v: "It keeps each customer's automations apart and keeps every version. A change goes live only after its checks and, where you ask for it, a colleague's approval. Work that fails is kept, not lost.",
         },
-        { k: "What it is not", v: "Not a new flow tool: it runs Node-RED unmodified, so a flow stays a Node-RED flow. Not released yet: Syrmos is early." },
+        {
+          k: "And AI",
+          v: "AI agents now draft and fix automations and call tools on people's behalf. In Syrmos they get no rights of their own: only those of the person who allowed them, never in production by themselves, and a person still approves what goes live.",
+        },
+        {
+          k: "What it is not",
+          v: "Not a new flow tool: it runs Node-RED unmodified, so a flow stays a Node-RED flow. Not released yet: the code and its guides go public at the first release.",
+        },
       ],
     },
-    reasonsLabel: "What Syrmos is for",
-    reasons: [
-      {
-        icon: "building",
-        title: "Keep customers apart",
-        line: "Each customer, a tenant, gets cells of its own on a network of its own, so one customer's flows can't reach another's. The use case One platform, many tenants shows it.",
+    promisesLabel: "Three promises",
+    promises: [
+      { icon: "building", problem: "apart", title: "Kept apart", line: "One customer's automations can't reach another's, or their passwords: every isolation probe passes, measured on one Docker host." },
+      { icon: "reviewer", problem: "change", title: "Changed safely", line: "Every change is a version, tried first and approved where required. Going back is one step: built, not yet shown in a trial." },
+      { icon: "log", problem: "nothing-lost", title: "Nothing lost", line: "Work is kept until it is handled. What fails is set aside, and sent again once fixed." },
+    ] as { icon: "building" | "reviewer" | "log"; problem: "apart" | "change" | "nothing-lost"; title: string; line: string }[],
+    ways: {
+      label: "Two ways in",
+      forYou: {
+        title: "Someone runs automations for you?",
+        lede: "Ask them these. Each links to how Syrmos answers it.",
+        questions: [
+          { q: "Are my automations kept apart from your other customers'?", problem: "apart" },
+          { q: "Are my passwords inside the automations?", problem: "connect" },
+          { q: "Can anyone change what runs in production without approval?", problem: "change" },
+          { q: "If something fails, is the work kept or lost?", problem: "nothing-lost" },
+          { q: "If AI is involved, what can it do on its own?", problem: "ai" },
+        ] as { q: string; problem: "apart" | "connect" | "change" | "nothing-lost" | "ai" }[],
       },
-      {
-        icon: "reviewer",
-        title: "Change production safely",
-        line: "Try a change to a pipeline where it can't hurt and keep it as a new version. It goes live only after its checks and, where required, another person's approval; if it misfires, go back in one step.",
+      forOthers: {
+        title: "You run Node-RED for others?",
+        lede: "Start with one story, step by step, then see how the parts fit together.",
+        tour: "The cold room story",
+        how: "How it works",
       },
-      {
-        icon: "key",
-        title: "Keep passwords out of the flows",
-        line: "A flow asks for a connection by name, and the password is added only on the way out, so it stays out of the flow, its exports and its logs.",
-      },
-    ] as { icon: "building" | "reviewer" | "key"; title: string; line: string }[],
-    featured: {
-      eyebrow: "Use cases",
-      title: "Start here",
-      lede: "In the order to learn Syrmos: one customer's first flow, keeping customers apart, changing production safely, testing first, what happens when work fails, and sharing one connection.",
-      count: 6,
-      all: (n: number) => `See all ${n} use cases, in order`,
+    },
+    start: {
+      eyebrow: "Start here",
+      title: "What Syrmos solves",
+      lede: "One story first, then a walkthrough for each problem Syrmos solves. Each step says what shows it.",
+      all: "All walkthroughs, with search",
     },
     system: {
       summary: "See the whole system",
@@ -79,12 +92,12 @@ export const ui = {
   overview: {
     title: "The whole platform on one page",
     caption:
-      "People, the assistant and outside agents work through the control plane, which deploys to each tenant's cells. Work comes in through the connector bridge; pipelines reach outside services through the credential gateway, which adds the secret. Cells share a durable bus. A spur, a tenant's own machine and still in development, runs a cell beside its machines and devices and syncs through the spur service.",
+      "People, Syrmos's assistant and outside AI agents all work through one control point, which sets up each customer's sealed spaces (cells). Work comes in through one door, and calls to other services leave through another, which adds the password on the way out. A bus keeps work until it has been handled. A spur, a customer's own machine on site, is still in development.",
   },
   gallery: {
     title: "Use cases",
-    lede: "In the order to learn Syrmos, from one customer's first flow to devices on a spur. Or find a situation close to yours.",
-    kind: "Kind",
+    lede: "In the order to learn Syrmos: the cold room story, then one walkthrough per problem. Or search for a situation close to yours.",
+    kind: "Problem",
     status: "Status",
     all: "All",
     none: "No use case matches. Clear a filter or the search.",
@@ -133,7 +146,6 @@ export const ui = {
     related: "Related use cases",
     whyStatus: "Why this status",
     verify: "Not yet verified (shown in development only)",
-    notFound: "There is no use case here.",
     diagramLabel: (title: string, step: string) => `Diagram of ${title}, ${step}. The step's story beside it describes what it shows.`,
     scrollHint: "Scroll the diagram sideways",
     viewLabel: "Diagram view",
@@ -166,6 +178,23 @@ export const ui = {
     more: "The other parts you meet",
     seeIn: "See it in",
     faq: "Questions people ask first",
+    // the words of the field, not only Syrmos's, for a reader new to it
+    words: {
+      title: "Words you'll meet",
+      items: [
+        { k: "Node-RED", v: "A visual tool for building automations by wiring steps together on a canvas. Syrmos runs it unmodified." },
+        { k: "Flow", v: "One automation drawn in Node-RED." },
+        { k: "Pipeline", v: "Syrmos's word for a flow that does one job, from where its work comes in to where it goes, kept as numbered versions." },
+        { k: "Tenant", v: "One customer, site or department, with its own cells, connections and people." },
+        { k: "Cell", v: "A sealed space where one tenant's flows run: its own Node-RED, in a container and a network of its own." },
+        { k: "Open cell and protected cell", v: "The test copy, where you try changes, and the live copy, production, which changes only when a version is promoted into it or rolled back." },
+        { k: "Promotion", v: "Copying a version of a pipeline from one cell into another, after its checks and any review it needs." },
+        { k: "Dead letter", v: "Work that failed for a reason a retry can't fix, kept aside until it can be sent again." },
+        { k: "Agent", v: "An AI program that acts in software on someone's behalf." },
+        { k: "MCP", v: "The Model Context Protocol: a common way for AI agents to connect to tools and data." },
+        { k: "Spur", v: "A tenant's own machine on site, beside its equipment, that runs a cell there; still in development." },
+      ],
+    },
   },
   // each answer from the Syrmos main branch: the README, NOTICE, quotas.ts, the idle-cells decision, the cell contract, the spur guide
   faq: [
