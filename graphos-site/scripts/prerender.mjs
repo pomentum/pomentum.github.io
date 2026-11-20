@@ -55,6 +55,8 @@ function prose(text, up = "") {
     .join("");
 }
 const pageUrl = (slug) => `${BASE}/use-cases/${slug}/`;
+/** The preview a shared link shows: the first screen, 1200 × 630 (public/og.png, made by scripts/og-image.mjs). */
+const OG = `${BASE}/og.png`;
 const write = (rel, html) => {
   const file = join(OUT, rel);
   mkdirSync(dirname(file), { recursive: true });
@@ -75,7 +77,7 @@ function page({ title, description, canonical, up, body, ld, image }) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
-${image ? `<meta property="og:image" content="${image}">\n` : ""}<link rel="icon" href="${up}favicon.svg" type="image/svg+xml">
+${image ? `<meta property="og:image" content="${image}">\n<meta name="twitter:card" content="summary_large_image">\n` : ""}<link rel="icon" href="${up}favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap">
@@ -187,7 +189,7 @@ ${related}
       canonical: pageUrl(m.slug),
       up,
       body,
-      image: m.shot ? `${BASE}/ui/${m.shot}.webp` : undefined,
+      image: m.shot ? `${BASE}/ui/${m.shot}.webp` : OG,
       ld: { "@context": "https://schema.org", "@type": "TechArticle", headline: t.title, description: t.situation, url: pageUrl(m.slug), inLanguage: "en", about, publisher },
     }),
   );
@@ -220,6 +222,7 @@ ${groups}`;
       title: "graphos use cases",
       description: `${ui.hero.title} ${ui.hero.lede}`,
       canonical: `${BASE}/use-cases/`,
+      image: OG,
       up: "../",
       body,
       ld: { "@context": "https://schema.org", "@type": "CollectionPage", name: "graphos use cases", url: `${BASE}/use-cases/`, inLanguage: "en", about, publisher },
@@ -257,6 +260,7 @@ ${ui.faq.map((f) => `<dt${f.id ? ` id="${f.id}"` : ""}>${esc(f.q)}</dt><dd>${pro
       title: "How graphos works · graphos use cases",
       description: partText.api.line,
       canonical: `${BASE}/how/`,
+      image: OG,
       up: "../",
       body,
       ld: { "@context": "https://schema.org", "@type": "TechArticle", headline: "How graphos works", url: `${BASE}/how/`, inLanguage: "en", about, publisher },
@@ -329,7 +333,7 @@ ${more.docs.map((d) => `<dt><a href="${d.href}" rel="noopener">${esc(d.name)}</a
       canonical: `${BASE}/overview/`,
       up,
       body,
-      image: `${BASE}/ui/explore-graph.webp`,
+      image: OG,
       ld: { "@context": "https://schema.org", "@type": "TechArticle", headline: "graphos", description: ui.hero.title, url: `${BASE}/overview/`, inLanguage: "en", about, publisher },
     }),
   );
