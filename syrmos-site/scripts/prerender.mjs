@@ -1,5 +1,5 @@
-// After `vite build`: a plain HTML page per use case, the list of them, How it works and the overview (the first screen's words,
-// written out), so that search engines, AI tools and link previews,
+// After `vite build`: the landing page's first view written into index.html (src/ssr.tsx), and a plain HTML page per use case,
+// the list of them and How it works, so that search engines, AI tools and link previews,
 // which mostly read a page without running its JavaScript, find every use case at an address of its own. Each page is written
 // from the same content files as the animated walkthrough, and links to it. Also writes sitemap.xml and llms.txt (the pages
 // workflow moves both to the site's root), lists the pages in the app's <noscript>, and leaves redirects at the first
@@ -25,6 +25,8 @@ const { useCases, textEn, ideas, otherParts, redirects } = await vite.ssrLoadMod
 const { statusesOf, sceneAt } = await vite.ssrLoadModule("/content/walkthroughs.ts");
 const { ui, partText, shots } = await vite.ssrLoadModule("/content/en/ui.ts");
 const { tour, slugOf, problemWords } = await vite.ssrLoadModule("/content/en/problems.ts");
+const { firstScreen } = await vite.ssrLoadModule("/src/ssr.tsx");
+const landing = firstScreen();
 await vite.close();
 
 const css = readdirSync(join(OUT, "static")).find((f) => f.endsWith(".css"));
@@ -90,7 +92,7 @@ ${ld ? `<script type="application/ld+json">${JSON.stringify(ld)}</script>\n` : "
 <body>
 <header class="bar"><div class="bar-inner">
 <span class="bar-brand"><a class="bar-home" href="/">Pomentum</a><span class="bar-sep" aria-hidden="true">/</span><a class="bar-name" href="${up}">syrmos</a></span>
-<nav class="bar-links" aria-label="Site"><a href="${up}overview/">Overview</a><a href="${up}use-cases/">${esc(ui.nav.useCases)}</a><a href="${up}how/">${esc(ui.nav.how)}</a></nav>
+<nav class="bar-links" aria-label="Site"><a href="${up}use-cases/">${esc(ui.nav.useCases)}</a><a href="${up}how/">${esc(ui.nav.how)}</a></nav>
 </div></header>
 <main class="wrap static">
 ${body}
@@ -137,7 +139,7 @@ ${s.body.map((p) => `<p>${prose(p)}</p>`).join("\n")}${metrics ? `\n<p class="m"
     .filter(Boolean)
     .map((r) => `<li><a href="../${r.slug}/">${esc(textEn[r.slug].title)}</a> · ${esc(textEn[r.slug].situation)}</li>`)
     .join("\n");
-  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="${up}overview/">${esc(ui.first.start.title)}</a></nav>
+  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="${up}">${esc(ui.first.start.title)}</a></nav>
 <h1 class="page-title">${esc(t.title)}</h1>
 <p class="case-situation">${esc(t.situation)}</p>
 <div class="pills"><span class="tag">${esc(t.team)}</span><span class="tag">${esc(ui.gallery.steps(t.steps.length))}</span>${badges(m)}</div>
@@ -251,57 +253,20 @@ ${ui.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${prose(f.a)}</dd>`).join("\n")}
   );
 }
 
-// the overview: the first screen of /syrmos/, written out, for a reader or a crawler that does not run its JavaScript
-{
-  const up = "../";
-  const body = `<p class="muted"><strong lang="el">${esc(ui.entry.headword)}</strong> ${esc(ui.entry.pron)} <em>${esc(ui.entry.pos)}</em> · ${esc(ui.entry.def)}<em>${esc(ui.entry.defEm)}</em>.</p>
-<h1 class="page-title">Syrmos</h1>
-<p class="case-situation">${esc(ui.hero.title)}</p>
-<p>${prose(ui.hero.plain)}</p>
-<p class="muted">${esc(ui.hero.who)} ${esc(ui.hero.eyebrow)}.</p>
-<p class="cta"><a class="btn primary" href="${up}">See it, animated →</a></p>
-<h2 class="eyebrow">${esc(ui.first.summary.title)}</h2>
-<dl>
-${ui.first.summary.rows.map((r) => `<dt>${esc(r.k)}</dt><dd>${prose(r.v)}</dd>`).join("\n")}
-</dl>
-<h2 class="eyebrow">${esc(ui.first.promisesLabel)}</h2>
-<dl>
-${ui.first.promises.map((r) => `<dt><a href="${up}use-cases/${slugOf(r.problem)}/">${esc(r.title)}</a></dt><dd>${esc(r.line)}</dd>`).join("\n")}
-</dl>
-<h2 class="eyebrow">${esc(ui.first.ways.forYou.title)}</h2>
-<p>${esc(ui.first.ways.forYou.lede)}</p>
-<ul>
-${ui.first.ways.forYou.questions.map((q) => `<li><a href="${up}use-cases/${slugOf(q.problem)}/">${esc(q.q)}</a></li>`).join("\n")}
-</ul>
-<h2 class="eyebrow">${esc(ui.first.ways.forOthers.title)}</h2>
-<p>${esc(ui.first.ways.forOthers.lede)} <a href="${up}use-cases/${tour.slug}/">${esc(ui.first.ways.forOthers.tour)}</a> · <a href="${up}how/">${esc(ui.first.ways.forOthers.how)}</a></p>
-<h2 class="eyebrow">${esc(ui.first.start.eyebrow)} · ${esc(ui.first.start.title)}</h2>
-<p>${esc(ui.first.start.lede)}</p>
-<ol class="static-list">
-<li><h3><a href="${up}use-cases/${tour.slug}/">${esc(tour.title)}</a> ${badges(useCases.find((m) => m.slug === tour.slug))}</h3><p>${esc(tour.line)}</p></li>
-${useCases.filter((m) => m.slug !== tour.slug).map((m) => `<li><h3><a href="${up}use-cases/${m.slug}/">${esc(textEn[m.slug].title)}</a> ${badges(m)}</h3><p>${esc(textEn[m.slug].situation)}</p></li>`).join("\n")}
-</ol>
-<p><a href="${up}use-cases/">${esc(ui.first.start.all)} →</a></p>
-<h2 class="eyebrow">${esc(ui.overview.title)}</h2>
-<p>${esc(ui.overview.caption)}</p>
-<p><a href="${up}how/">${esc(ui.nav.how)} →</a></p>`;
-  write(
-    `overview/index.html`,
-    page({
-      title: "Syrmos · governed, multi-tenant Node-RED",
-      description: `${ui.hero.title} ${ui.hero.who}`,
-      canonical: `${BASE}/overview/`,
-      up,
-      body,
-      image: OG,
-      ld: { "@context": "https://schema.org", "@type": "TechArticle", headline: "Syrmos", description: ui.hero.title, url: `${BASE}/overview/`, inLanguage: "en", about, publisher },
-    }),
-  );
-}
+// the overview's address, from when the landing page's words were written out there: the landing page carries them now
+write(
+  "overview/index.html",
+  `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Moved: Syrmos</title>
+<link rel="canonical" href="${BASE}/"><meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url=${BASE}/">
+</head><body><p>This page has moved to <a href="${BASE}/">${BASE}/</a>.</p></body></html>
+`,
+);
 
 // sitemap.xml and llms.txt, moved to the site's root by the pages workflow
 {
-  const urls = [`${SITE}/`, `${BASE}/`, `${BASE}/overview/`, `${BASE}/use-cases/`, `${BASE}/how/`, ...useCases.map((m) => pageUrl(m.slug))];
+  const urls = [`${SITE}/`, `${BASE}/`, `${BASE}/use-cases/`, `${BASE}/how/`, ...useCases.map((m) => pageUrl(m.slug))];
   write(
     "sitemap.xml",
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).join("\n")}\n</urlset>\n`,
@@ -326,7 +291,6 @@ ${useCases.map(line).join("\n")}
 ## Syrmos, the whole picture
 
 - [Syrmos](${BASE}/): the page: what Syrmos is, the platform drawn, and the use cases, animated step by step.
-- [Syrmos, written out](${BASE}/overview/): the page's first screen as plain text: in 30 seconds, three promises, two ways in, and what Syrmos solves.
 - [How Syrmos works](${BASE}/how/): the five ideas every use case rests on (cells, protected cells, promotion, the credential gateway, the bus) and the other parts.
 - [All Syrmos use cases](${BASE}/use-cases/): the list, in the order to learn Syrmos, with each one's kind and status.
 
@@ -343,9 +307,11 @@ ${useCases.map(line).join("\n")}
   const file = join(OUT, "index.html");
   const html = readFileSync(file, "utf8");
   const list = useCases.map((m) => `<li><a href="use-cases/${m.slug}/">${esc(textEn[m.slug].title)}</a></li>`).join("");
-  const noscript = `<noscript><div style="padding:24px;font-family:system-ui;max-width:760px"><p>The animated pages need JavaScript. Each walkthrough is also written out on a page of its own:</p><ul>${list}</ul><p><a href="overview/">Syrmos, written out</a> · <a href="use-cases/">All Syrmos use cases</a> · <a href="how/">How Syrmos works</a></p></div></noscript>`;
-  const next = html.replace(/<noscript>[\s\S]*?<\/noscript>/, noscript);
-  if (next === html) throw new Error("prerender: no <noscript> in the built index.html");
+  const noscript = `<noscript><div style="padding:24px;font-family:system-ui;max-width:760px"><p>The animated pages need JavaScript. Each walkthrough is also written out on a page of its own:</p><ul>${list}</ul><p><a href="use-cases/">All Syrmos use cases</a> · <a href="how/">How Syrmos works</a></p></div></noscript>`;
+  const withWords = html.replace('<div id="root"></div>', `<div id="root">${landing}</div>`);
+  if (withWords === html) throw new Error("prerender: no empty #root in the built index.html");
+  const next = withWords.replace(/<noscript>[\s\S]*?<\/noscript>/, noscript);
+  if (next === withWords) throw new Error("prerender: no <noscript> in the built index.html");
   writeFileSync(file, next);
 }
 
@@ -377,4 +343,4 @@ ${useCases.map(line).join("\n")}
   }
 }
 
-console.log(`prerender: ${useCases.length} walkthroughs, the list, How it works and the overview; sitemap.xml and llms.txt; redirects from ${Object.keys(redirects).length} earlier walkthroughs and /use-cases/`);
+console.log(`prerender: ${useCases.length} walkthroughs, the landing page's first view, the list and How it works; sitemap.xml and llms.txt; redirects from ${Object.keys(redirects).length} earlier walkthroughs and /use-cases/`);

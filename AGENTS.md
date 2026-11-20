@@ -40,10 +40,11 @@ workflow (`.github/workflows/pages.yml`) builds on every push to `main`; the sit
   checking the page against a new release.
 - **Their addresses:** `/syrmos/` and `/graphos/` are the animated app (`#/use-cases/<use case>/<step>`, `#/how`; graphos's
   also `#/<section>`, and its old single page's anchors such as `#benchmarks`). Below, Syrmos's; graphos's are the same
-  under `/graphos/`, with `/graphos/overview/` for its sections.
+  under `/graphos/`. Each landing page's first view is written into its own HTML at build (`src/ssr.tsx`), so a reader that runs
+  no JavaScript reads it at `/syrmos/` and `/graphos/`; the old `/overview/` addresses redirect there.
 - **Syrmos's addresses:** `/syrmos/` is the animated app (`#/use-cases/<use case>/<step>`, `#/how`). For search engines and AI tools,
   `npm run build` also writes a plain page per use case at `/syrmos/use-cases/<use case>/`, the list at `/syrmos/use-cases/`
-  How it works at `/syrmos/how/` and the first screen written out at `/syrmos/overview/` (`syrmos-site/scripts/prerender.mjs`),
+  How it works at `/syrmos/how/` (`syrmos-site/scripts/prerender.mjs`),
   and `sitemap.xml` and `llms.txt`. They come from the same content files; never edit them by hand. The first addresses,
   `/use-cases/...`, redirect to these.
 - **The link previews** are `syrmos-site/public/og.png` and `graphos-site/public/og.png`, a picture of each page's first screen.
