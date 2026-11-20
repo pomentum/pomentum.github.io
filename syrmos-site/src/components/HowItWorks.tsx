@@ -45,7 +45,7 @@ export function HowItWorks() {
           <Legend />
           <ViewSwitch />
         </div>
-        <figcaption>{ui.overview.caption}</figcaption>
+        <figcaption className="lines">{ui.overview.caption}</figcaption>
       </figure>
       <h2 className="section-title">{ui.how.five}</h2>
       <ol className="ideas">

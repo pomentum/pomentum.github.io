@@ -36,52 +36,43 @@ export const ui = {
       rows: [
         {
           k: "The problem",
-          v: "Many businesses rely on small automations, like “when a fridge warms up, alert someone”, that a supplier or an in-house team runs for several customers at once. Too often they all run in one place, where one customer's automation can reach another's, passwords sit inside the automations, and a change goes live without anyone checking.",
-        },
-        {
-          k: "What Syrmos does",
-          v: "It keeps each customer's automations apart and keeps every version. A change goes live only after its checks and, where you ask for it, a colleague's approval. Work that fails is kept, not lost.",
+          v: "Small automations often run for many customers in one place: one customer's can reach another's, passwords sit inside them, and changes go live without anyone checking.",
         },
         {
           k: "And AI",
-          v: "AI agents now draft and fix automations and call tools on people's behalf. In Syrmos they get no rights of their own: only those of the person who allowed them, never in production by themselves, and a person still approves what goes live.",
+          v: "AI can draft and fix automations, but only with the rights of the person who allowed it, and never changes production by itself.",
         },
         {
           k: "What it is not",
-          v: "Not a new flow tool: it runs Node-RED unmodified, so a flow stays a Node-RED flow. Not released yet: the code and its guides go public at the first release.",
+          v: "Not a new tool: it runs Node-RED unmodified, so a flow stays a Node-RED flow. The code and guides go public at the first release.",
         },
       ],
     },
-    promisesLabel: "Three promises",
-    promises: [
-      { icon: "building", problem: "apart", title: "Kept apart", line: "One customer's automations can't reach another's, or their passwords: every isolation probe passes, measured on one Docker host." },
-      { icon: "reviewer", problem: "change", title: "Changed safely", line: "Every change is a version, tried first and approved where required. Going back is one step: built, not yet shown in a trial." },
-      { icon: "log", problem: "nothing-lost", title: "Nothing lost", line: "Work is kept until it is handled. What fails is set aside, and sent again once fixed." },
-    ] as { icon: "building" | "reviewer" | "log"; problem: "apart" | "change" | "nothing-lost"; title: string; line: string }[],
-    ways: {
-      label: "Two ways in",
-      forYou: {
-        title: "Someone runs automations for you?",
-        lede: "Ask them these. Each links to how Syrmos answers it.",
-        questions: [
-          { q: "Are my automations kept apart from your other customers'?", problem: "apart" },
-          { q: "Are my passwords inside the automations?", problem: "connect" },
-          { q: "Can anyone change what runs in production without approval?", problem: "change" },
-          { q: "If something fails, is the work kept or lost?", problem: "nothing-lost" },
-          { q: "If AI is involved, what can it do on its own?", problem: "ai" },
-        ] as { q: string; problem: "apart" | "connect" | "change" | "nothing-lost" | "ai" }[],
-      },
-      forOthers: {
-        title: "You run Node-RED for others?",
-        lede: "Start with one story, step by step, then see how the parts fit together.",
-        tour: "The cold room story",
-        how: "How it works",
-      },
+    // five questions a buyer can ask, each with what a good answer is, from the walkthrough that shows it
+    questions: {
+      title: "Five questions to ask whoever runs your automations",
+      lede: "",
+      items: [
+        { q: "Are my automations kept apart from your other customers'?", a: "Yes: sealed apart, with no way to another customer's automations or passwords.", problem: "apart" },
+        { q: "Are my passwords inside the automations?", a: "No: the password is added only on the way out.", problem: "connect" },
+        { q: "Can anyone change what runs in production without approval?", a: "No: a change is tried first, then approved where required.", problem: "change" },
+        { q: "If something fails, is the work kept or lost?", a: "Kept: a failed batch is set aside, and sent again once fixed.", problem: "nothing-lost" },
+        { q: "If AI is involved, what can it do on its own?", a: "Only what its person may do, and never change production by itself.", problem: "ai" },
+      ] as { q: string; a: string; problem: "apart" | "connect" | "change" | "nothing-lost" | "ai" }[],
+    },
+    // where each kind of reader starts
+    paths: {
+      title: "Where to start",
+      items: [
+        { who: "Running a business or its operations?", go: "The cold room story", to: "tour" },
+        { who: "Leading product, or bringing in AI?", go: "Let AI help, with no more rights than you", to: "ai" },
+        { who: "Technical, or running Node-RED for others?", go: "How it works", to: "how" },
+      ] as { who: string; go: string; to: "tour" | "ai" | "how" }[],
     },
     start: {
       eyebrow: "Start here",
       title: "What Syrmos solves",
-      lede: "One story first, then a walkthrough for each problem Syrmos solves. Each step says what shows it.",
+      lede: "",
       all: "All walkthroughs, with search",
     },
     system: {
@@ -92,7 +83,7 @@ export const ui = {
   overview: {
     title: "The whole platform on one page",
     caption:
-      "People, Syrmos's assistant and outside AI agents all work through one control point, which sets up each customer's sealed spaces (cells). Work comes in through one door, and calls to other services leave through another, which adds the password on the way out. A bus keeps work until it has been handled. A spur, a customer's own machine on site, is still in development.",
+      "People and AI agents alike work through one control point. Each customer's automations run in sealed spaces of their own (cells). Passwords are added only on the way out. A bus keeps work until it has been handled. A spur, a customer's own machine on site, is still in development.",
   },
   gallery: {
     title: "Use cases",
@@ -122,6 +113,9 @@ export const ui = {
     target: "Target",
     dev: "In development",
   } satisfies Record<Status, string>,
+  // a card whose walkthrough mixes evidence: one plain label; each step inside says which
+  partly: "Partly shown",
+  partlyHelp: "Some steps are shown in the demo or a trial, others are targets or in development; each step inside says which.",
   statusHelp: {
     shown: "Shown in the recorded demo or a trial; each says what it ran against.",
     target: "Syrmos is designed for it, but it hasn't been shown end to end.",

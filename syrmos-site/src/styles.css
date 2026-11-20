@@ -562,10 +562,6 @@ details.system .overview { margin: 0; border: 0; border-top: 1px solid var(--lin
 }
 
 /* — What Syrmos solves: the promises as links, two ways in, the tour and the problems, and a problem's own page — */
-.promises li { padding: 0; }
-.promises li a { display: block; height: 100%; padding: 18px 20px; color: inherit; text-decoration: none; border-radius: 4px; transition: background 0.15s; }
-.promises li a:hover { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
-.promises li a:hover h2 { color: var(--accent); }
 .ways { margin: 28px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .way { border: 1px solid var(--line); border-radius: 4px; background: var(--panel); padding: 18px 20px; }
 .way h2 { font-size: 18px; letter-spacing: -0.015em; margin: 0 0 4px; }
@@ -622,3 +618,20 @@ table.strip .from a { margin-right: 6px; }
 /* long metric values and team labels wrap inside their box */
 .m-value { overflow-wrap: anywhere; }
 .pills .tag { white-space: normal; max-width: 100%; overflow-wrap: anywhere; }
+
+/* a card whose walkthrough mixes evidence: one plain label */
+.badge.st-partly { color: var(--accent); background: transparent; border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.badge.st-partly::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); border: 1px solid currentColor; width: 5px; height: 5px; }
+/* the five questions, each with a good answer */
+.questions a { display: grid; gap: 3px; }
+.questions a::after { content: none; }
+.questions .q { font-weight: 600; }
+.questions .q::after { content: " →"; color: var(--accent); }
+.questions .a { color: var(--mute); font-size: 13.5px; }
+/* where to start, by reader */
+.paths { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.paths li { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); }
+.paths .who { color: var(--mute); font-size: 13.5px; }
+.paths a { font-weight: 600; text-decoration: none; }
+/* a caption written as short sentences, one to a line */
+figcaption.lines { white-space: normal; }

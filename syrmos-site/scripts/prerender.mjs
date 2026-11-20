@@ -24,7 +24,7 @@ const vite = await createServer({ root: ROOT, logLevel: "error", server: { middl
 const { useCases, textEn, ideas, otherParts, redirects } = await vite.ssrLoadModule("/content/index.ts");
 const { statusesOf, sceneAt } = await vite.ssrLoadModule("/content/walkthroughs.ts");
 const { ui, partText, shots } = await vite.ssrLoadModule("/content/en/ui.ts");
-const { tour, slugOf, problemWords } = await vite.ssrLoadModule("/content/en/problems.ts");
+const { tour, slugOf, problemWords, cardOf } = await vite.ssrLoadModule("/content/en/problems.ts");
 const { firstScreen } = await vite.ssrLoadModule("/src/ssr.tsx");
 const landing = firstScreen();
 await vite.close();
@@ -107,6 +107,11 @@ ${body}
 }
 
 const badges = (m) => statusesOf(m, textEn[m.slug]).map(badge).join("");
+/** One label for a walkthrough in a list: its status, or "Partly shown" where its steps mix evidence. */
+const cardStatus = (m) => {
+  const all = statusesOf(m, textEn[m.slug]);
+  return all.length === 1 ? badge(all[0]) : `<span class="badge st-partly">${esc(ui.partly)}</span>`;
+};
 const badge = (status) => `<span class="badge st-${status}">${esc(ui.status[status])}</span>`;
 const publisher = { "@type": "Organization", name: "Pomentum", url: `${SITE}/` };
 const about = { "@type": "SoftwareApplication", name: "Syrmos", applicationCategory: "DeveloperApplication", operatingSystem: "Linux, Windows", license: "https://www.apache.org/licenses/LICENSE-2.0" };
@@ -181,7 +186,7 @@ ${related}
   const groups = `<h2 class="eyebrow">${esc(ui.gallery.lede)}</h2>\n<ol class="static-list">\n${useCases
     .map(
       (m, i) =>
-        `<li><h3>${i + 1}. <a href="${m.slug}/">${esc(textEn[m.slug].title)}</a> ${badges(m)}</h3><p>${esc(textEn[m.slug].situation)}</p></li>`,
+        `<li><h3>${i + 1}. <a href="${m.slug}/">${esc(textEn[m.slug].title)}</a> ${cardStatus(m)}</h3><p>${esc(cardOf(m.slug) ?? textEn[m.slug].situation)}</p></li>`,
     )
     .join("\n")}\n</ol>`;
   const help = Object.keys(ui.status).map((s) => `<dt>${badge(s)}</dt><dd>${esc(ui.statusHelp[s])}</dd>`).join("\n");
