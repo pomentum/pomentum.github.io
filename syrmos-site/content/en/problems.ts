@@ -3,15 +3,19 @@
 
 export type ProblemId = "apart" | "change" | "nothing-lost" | "person" | "connect" | "ai" | "on-site";
 
-export const problems: { id: ProblemId; slug: string }[] = [
-  { id: "apart", slug: "customers-apart" },
-  { id: "change", slug: "change-safely" },
-  { id: "nothing-lost", slug: "nothing-lost" },
-  { id: "person", slug: "person-decides" },
-  { id: "connect", slug: "connect-services" },
-  { id: "ai", slug: "ai-helps" },
-  { id: "on-site", slug: "beside-the-machines" },
+// each with the one line its card shows: the everyday situation, in the reader's words
+export const problems: { id: ProblemId; slug: string; card: string }[] = [
+  { id: "apart", slug: "customers-apart", card: "One customer's mistake, or its code, never reaches another's." },
+  { id: "change", slug: "change-safely", card: "Try a change first, approve it, and go back if it misfires." },
+  { id: "nothing-lost", slug: "nothing-lost", card: "A failed batch is kept, and sent again once fixed." },
+  { id: "person", slug: "person-decides", card: "Large orders and batches wait for a person; the rest goes straight through." },
+  { id: "connect", slug: "connect-services", card: "Chat, code hosting, an ERP: each reached with a password the automation never sees." },
+  { id: "ai", slug: "ai-helps", card: "Draft or fix an automation with AI; it never changes production by itself." },
+  { id: "on-site", slug: "beside-the-machines", card: "The show keeps running on the venue's machine when the internet drops." },
 ];
+
+/** A walkthrough's card line. */
+export const cardOf = (slug: string): string | undefined => problems.find((p) => p.slug === slug)?.card;
 
 /** The walkthrough that answers a problem. */
 export const slugOf = (id: string): string => problems.find((p) => p.id === id)?.slug ?? id;
@@ -20,10 +24,9 @@ export const slugOf = (id: string): string => problems.find((p) => p.id === id)?
 export const tour = {
   slug: "cold-room",
   title: "Start with one story: cold room alerts",
-  line: "Fridges report their temperatures; when one warms up, the person on call is told. Eight short steps put the promises below in one place, each saying what shows it.",
+  line: "Fridges report their temperatures; when one warms up, the person on call is told, and nobody can change that alert unchecked.",
 };
 
 export const problemWords = {
   stepFrom: "This step:",
-  count: (n: number) => `${n} steps`,
 };

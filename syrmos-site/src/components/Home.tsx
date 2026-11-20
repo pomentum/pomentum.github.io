@@ -8,14 +8,12 @@ import { Diagram } from "./Diagram";
 import { StageScroll } from "./StageScroll";
 import { Legend } from "./Legend";
 import { ViewSwitch } from "./ViewSwitch";
-import { Badge } from "./Badge";
+import { Badge, CardStatus } from "./Badge";
 import { GitHubMark, README, REPO } from "./TopBar";
 import { OutLink } from "./OutLink";
 import { prose } from "./Terms";
-import { ICONS } from "./Icons";
-import { slugOf, tour, problemWords } from "../../content/en/problems";
+import { slugOf, tour, cardOf } from "../../content/en/problems";
 import { statusesOf } from "../../content/walkthroughs";
-import type { IconName } from "../../content/types";
 
 const STATUSES: Status[] = ["shown", "target", "dev"];
 
@@ -34,16 +32,13 @@ export function Card({ m, visited }: { m: UseCaseMeta; visited: boolean }) {
         <div className="card-body">
           <div className="card-meta">
             {m.slug === tour.slug && <span className="tag kind">{ui.first.start.eyebrow}</span>}
-            {statusesOf(m, t).map((st) => (
-              <Badge key={st} status={st} />
-            ))}
+            <CardStatus statuses={statusesOf(m, t)} />
           </div>
           <h3>{t.title}</h3>
           {t.caveat && <p className="caveat">{t.caveat}</p>}
-          <p>{t.situation}</p>
+          <p>{cardOf(m.slug) ?? t.situation}</p>
           <p className="card-foot">
             <span>{t.team}</span>
-            <span>{i18n.ui.gallery.steps(t.steps.length)}</span>
             {visited && (
               <span className="seen">
                 <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
@@ -161,17 +156,6 @@ export function Gallery({ visited }: { visited: string[] }) {
   );
 }
 
-/** An icon of the diagrams' set, on its own: a 24-unit glyph in a box. */
-function Glyph({ name }: { name: IconName }) {
-  return (
-    <svg className="reason-icon" viewBox="0 0 24 24" aria-hidden="true">
-      {ICONS[name].map((d, i) => (
-        <path key={i} d={d} />
-      ))}
-    </svg>
-  );
-}
-
 export function Home(_props: { visited: string[] }) {
   const i18n = useI18n();
   const { ui } = i18n;
@@ -224,47 +208,38 @@ export function Home(_props: { visited: string[] }) {
           ))}
         </dl>
       </section>
-      <ul className="reasons promises" aria-label={ui.first.promisesLabel}>
-        {ui.first.promises.map((r) => (
-          <li key={r.title}>
-            <a href={href.step(slugOf(r.problem), 1)}>
-              <Glyph name={r.icon} />
-              <h2>{r.title}</h2>
-              <p>{r.line}</p>
-            </a>
-          </li>
-        ))}
-      </ul>
-      <section className="ways" aria-label={ui.first.ways.label}>
+      <section className="ways" aria-label={ui.first.questions.title}>
         <div className="way">
-          <h2>{ui.first.ways.forYou.title}</h2>
-          <p className="muted">{ui.first.ways.forYou.lede}</p>
+          <h2>{ui.first.questions.title}</h2>
+          {ui.first.questions.lede && <p className="muted">{ui.first.questions.lede}</p>}
           <ul className="questions">
-            {ui.first.ways.forYou.questions.map((q) => (
+            {ui.first.questions.items.map((q) => (
               <li key={q.q}>
-                <a href={href.step(slugOf(q.problem), 1)}>{q.q}</a>
+                <a href={href.step(slugOf(q.problem), 1)}>
+                  <span className="q">{q.q}</span>
+                  <span className="a">{q.a}</span>
+                </a>
               </li>
             ))}
           </ul>
         </div>
         <div className="way">
-          <h2>{ui.first.ways.forOthers.title}</h2>
-          <p className="muted">{ui.first.ways.forOthers.lede}</p>
-          <p className="way-cta">
-            <a className="btn primary" href={href.step(tour.slug, 1)}>
-              {ui.first.ways.forOthers.tour} →
-            </a>
-            <a className="btn" href={href.how()}>
-              {ui.first.ways.forOthers.how}
-            </a>
-          </p>
+          <h2>{ui.first.paths.title}</h2>
+          <ul className="paths">
+            {ui.first.paths.items.map((x) => (
+              <li key={x.who}>
+                <span className="who">{x.who}</span>
+                <a href={x.to === "how" ? href.how() : x.to === "tour" ? href.step(tour.slug, 1) : href.step(slugOf(x.to), 1)}>{x.go} →</a>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
       <section className="featured" id="start" tabIndex={-1} aria-labelledby="start-title">
         <div className="section-head stacked">
           <p className="eyebrow">{ui.first.start.eyebrow}</p>
           <h2 id="start-title">{ui.first.start.title}</h2>
-          <p>{words(ui.first.start.lede)}</p>
+          {ui.first.start.lede && <p>{words(ui.first.start.lede)}</p>}
         </div>
         {tourMeta && (
           <a className="tour" href={href.step(tour.slug, 1)}>
@@ -275,7 +250,7 @@ export function Home(_props: { visited: string[] }) {
               <h3>{tour.title}</h3>
               <p>{tour.line}</p>
               <p className="card-foot">
-                <Badge status={tourMeta.status} />
+                <CardStatus statuses={statusesOf(tourMeta, textOf(tourMeta.slug))} />
               </p>
             </div>
           </a>
@@ -290,12 +265,9 @@ export function Home(_props: { visited: string[] }) {
                   <a href={href.step(m.slug, 1)}>
                     <span className="problem-n">{i + 1}</span>
                     <h3>{w.title}</h3>
-                    <p>{w.situation}</p>
+                    <p>{cardOf(m.slug) ?? w.situation}</p>
                     <p className="card-foot">
-                      <span>{problemWords.count(w.steps.length)}</span>
-                      {statusesOf(m, w).map((st) => (
-                        <Badge key={st} status={st} />
-                      ))}
+                      <CardStatus statuses={statusesOf(m, w)} />
                     </p>
                   </a>
                 </li>
@@ -321,7 +293,7 @@ export function Home(_props: { visited: string[] }) {
             <Legend />
             <ViewSwitch />
           </div>
-          <figcaption>{ui.overview.caption}</figcaption>
+          <figcaption className="lines">{ui.overview.caption}</figcaption>
         </figure>
       </details>
     </div>
